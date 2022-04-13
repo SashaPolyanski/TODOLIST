@@ -1,0 +1,9 @@
+.error {
+    color: red;
+}
+.errorBorder {
+    border: red 2px solid;
+}
+.filterActive {
+    background-color: dodgerblue;
+}
