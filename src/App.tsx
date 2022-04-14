@@ -90,7 +90,7 @@ function App() {
                 <div style={{marginTop:'60px', marginLeft:'30px'}}><h3>ADD NEW TODO</h3></div>
                 <Grid container style={{padding:'10px', margin: '10px 0px 40px 0px'}}>
 
-                    <AddItemForm addTask={addTl}  />
+                    <AddItemForm addItem={addTl}  />
                 </Grid>
                 <Grid container spacing={5}>
                     {tl.map((tl) => {

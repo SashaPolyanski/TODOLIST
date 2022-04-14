@@ -45,7 +45,7 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const changeTitleHandler = useCallback((taskID: string, title: string) => {
         props.changeTitle(props.tlId, taskID, title)
-    }, [props.changeTitle])
+    }, [props.changeTitle,props.tlId])
 
 
     const changeStatusHandler = useCallback((taskID: string, newIsDoneValue: boolean) => {
@@ -70,7 +70,7 @@ export const Todolist = React.memo((props: PropsType) => {
         <h3><EditableSpan oldTitle={props.title} changeTitleHandler={changeTitleTlHandler}/></h3>
 
         <div>
-            <AddItemForm addTask={callBackHandler}/>
+            <AddItemForm addItem={callBackHandler}/>
         </div>
         <ul>
             {filteredTask.map((m) => {

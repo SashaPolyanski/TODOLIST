@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";
 
 type PropsType = {
-    addTask: ( title: string) => void
+    addItem: ( title: string) => void
 }
 
 export const AddItemForm =React.memo ((props: PropsType) => {
@@ -20,7 +20,7 @@ export const AddItemForm =React.memo ((props: PropsType) => {
     }
     const addTaskHandler = () => {
         if (title.trim() !== '') {
-            props.addTask(title.trim())
+            props.addItem(title.trim())
             setTitle('')
         } else {
             setError('Обязательное поле для ввода')

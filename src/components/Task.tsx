@@ -8,12 +8,12 @@ import {TaskType} from "../Todolist";
 
 type PropsType = {
     task: TaskType
-    removeTaskHandler:(taskID: string)=>void
-    changeTitleHandler: (taskID: string,title: string)=>void
-    changeStatusHandler: (taskID: string, newValueChecked: boolean)=>void
+    removeTaskHandler: (taskID: string) => void
+    changeTitleHandler: (taskID: string, title: string) => void
+    changeStatusHandler: (taskID: string, newValueChecked: boolean) => void
 }
 
-const Task = React.memo ((props: PropsType) => {
+const Task = React.memo((props: PropsType) => {
 
     console.log('task')
 
@@ -22,11 +22,9 @@ const Task = React.memo ((props: PropsType) => {
     }, [props.changeStatusHandler, props.task.id])
 
 
-
-
-    const changeTitleHandler =  useCallback(( title: string) => {
+    const changeTitleHandler = useCallback((title: string) => {
         props.changeTitleHandler(props.task.id, title)
-    }, [props.changeTitleHandler,props.task.id])
+    }, [props.changeTitleHandler, props.task.id])
 
 
     const removeTaskHandler = useCallback(() => props.removeTaskHandler(props.task.id), [props.removeTaskHandler, props.task.id])
