@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import s from "../Todolist.module.css";
+import s from "../../Todolist.module.css";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";

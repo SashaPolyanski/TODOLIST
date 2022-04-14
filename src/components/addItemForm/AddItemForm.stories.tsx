@@ -10,7 +10,7 @@ export default {
     component: AddItemForm,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {
-        addTask : {
+        addItem : {
             description: 'callback'
         }
     },

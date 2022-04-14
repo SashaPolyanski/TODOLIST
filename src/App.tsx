@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
-import AddItemForm from "./components/AddItemForm";
+import AddItemForm from "./components/addItemForm/AddItemForm";
 import {Todolist} from "./Todolist";
 import PrimarySearchAppBar from "./components/AppBar";
 import {Container, Grid, Paper} from "@mui/material";

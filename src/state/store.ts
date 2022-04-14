@@ -4,7 +4,7 @@ import {todoListReducer} from "./todoListReducer";
 
 
  const rootReducer = combineReducers({
-    task: tasksReducer,
+    tasks: tasksReducer,
     TL: todoListReducer
 })
 

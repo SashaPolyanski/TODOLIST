@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 import {FilterValueType} from "./App";
-import AddItemForm from "./components/AddItemForm";
-import EditableSpan from "./components/EditableSpan";
+import AddItemForm from "./components/addItemForm/AddItemForm";
+import EditableSpan from "./components/EditableSpan/EditableSpan";
 import {Button} from "@mui/material";
-import Task from "./components/Task";
+import Task from "./components/task/Task";
 
 export type TaskType = {
     id: string

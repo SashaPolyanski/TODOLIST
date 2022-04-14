@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-import AddItemForm from "./AddItemForm";
+import AddItemForm from "../addItemForm/AddItemForm";
 import {action} from "@storybook/addon-actions";
 import Task from "./Task";
-import {TaskType} from "../Todolist";
+import {TaskType} from "../../Todolist";
 
 export default {
     title: 'TODOLIST/Task',

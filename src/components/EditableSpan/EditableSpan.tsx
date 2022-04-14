@@ -20,15 +20,19 @@ const EditableSpan = React.memo ((props: PropsType) => {
         props.changeTitleHandler(title)
         setEdit(!edit)
     }
-    const editHandlerInput = useCallback ((e: KeyboardEvent<HTMLDivElement>) => {
+    const editHandlerFalse = () => {
+        props.changeTitleHandler(title)
+        setEdit(false)
+    }
+    const editHandlerInput = useCallback ((e: KeyboardEvent<HTMLSpanElement>) => {
         if (e.key === 'Enter')
-            setEdit(!edit)
+            setEdit(false)
         props.changeTitleHandler(title)
     },[props.changeTitleHandler])
 
 
     return (
-        <span onDoubleClick={editHandler} onKeyPress={editHandlerInput} >
+        <span onDoubleClick={editHandler} onBlur={editHandlerFalse} onKeyPress={editHandlerInput} >
             {edit ?
                 <TextField id="standard-basic" variant="standard" size={'small'} value={title} autoFocus onChange={onChangeHandler}/>
                 :

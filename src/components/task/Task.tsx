@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import s from "../Todolist.module.css";
+import s from "../../Todolist.module.css";
 import {IconButton, Switch} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditableSpan from "./EditableSpan";
-import {TaskType} from "../Todolist";
+import EditableSpan from "../EditableSpan/EditableSpan";
+import {TaskType} from "../../Todolist";
 
 
 type PropsType = {

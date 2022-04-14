@@ -1,13 +1,13 @@
 import React, {useCallback} from 'react';
-import './App.css';
-import AddItemForm from "./components/AddItemForm";
-import {TasksStateType, Todolist} from "./Todolist";
-import PrimarySearchAppBar from "./components/AppBar";
+import '../App.css';
+import AddItemForm from "../components/addItemForm/AddItemForm";
+import {TasksStateType, Todolist} from "../Todolist";
+import PrimarySearchAppBar from "../components/AppBar";
 import {Container, Grid, Paper} from "@mui/material";
-import {AddTlAc, ChangeFilterAc, RemoveTLAc, ReNameAc} from "./state/todoListReducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasksReducer";
+import {AddTlAc, ChangeFilterAc, RemoveTLAc, ReNameAc} from "../state/todoListReducer";
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasksReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./state/store";
+import {AppRootStateType} from "../state/store";
 
 
 export type FilterValueType = 'ALL' | 'COMPLETED' | 'ACTIVE'
@@ -21,7 +21,7 @@ export type TlType = {
 function AppWithRedux() {
 
 
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.task)
+    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const tl = useSelector<AppRootStateType, Array<TlType>>(state => state.TL)
     const dispatch = useDispatch()
 
