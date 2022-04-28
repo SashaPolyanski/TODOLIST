@@ -1,28 +1,35 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import '../App.css';
 import AddItemForm from "../components/addItemForm/AddItemForm";
 import {TasksStateType, Todolist} from "../Todolist";
 import PrimarySearchAppBar from "../components/AppBar";
 import {Container, Grid, Paper} from "@mui/material";
-import {AddTlAc, ChangeFilterAc, RemoveTLAc, ReNameAc} from "../state/todoListReducer";
+import {
+    AddTlAc,
+    ChangeFilterAc,
+    fetchTodosThunk,
+    FilterValueType,
+    RemoveTLAc,
+    ReNameAc,
+    TodolistDomainType
+} from "../state/todoListReducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasksReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
+import {TaskStatuses} from "../api/todolistApi";
 
 
-export type FilterValueType = 'ALL' | 'COMPLETED' | 'ACTIVE'
-export type TlType = {
-    id: string
-    title: string
-    filter: FilterValueType
-}
+
+
 
 
 function AppWithRedux() {
-
+    useEffect(() => {
+        dispatch(fetchTodosThunk)
+    },[])
 
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-    const tl = useSelector<AppRootStateType, Array<TlType>>(state => state.TL)
+    const tl = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.TL)
     const dispatch = useDispatch()
 
 
@@ -30,37 +37,37 @@ function AppWithRedux() {
     // console.log(Object.keys(tasks))
 
 
-    const removeTask = useCallback ( (tlID: string, taskID: string) => {
+    const removeTask = useCallback((tlID: string, taskID: string) => {
         //Фиксируем изменненное значение, делаем копию наших таскс, находим наш ключь и перезатираем его новым объектом тастс с этим ключем, вызываем фильтр и фильтруем таски
         // setTasks({...tasks, [tlID]: tasks[tlID].filter(f => f.id !== taskID)})
         //Создаем action и диспачим его в наш редюсек
         let action = removeTaskAC(taskID, tlID)
         dispatch(action)
 
-    },[dispatch,removeTaskAC])
-    const addTask =useCallback ((tlID: string, title: string) => {
+    }, [dispatch, removeTaskAC])
+    const addTask = useCallback((tlID: string, title: string) => {
         dispatch(addTaskAC(title, tlID))
         // setTasks({...tasks, [tlID]: [{id: v1(), title, isDone: false}, ...tasks[tlID]]})
-    },[dispatch,addTaskAC])
-    const changeStatus = useCallback ((tlID: string, taskID: string, checked: boolean) => {
-        dispatch(changeTaskStatusAC(tlID, taskID, checked))
+    }, [dispatch, addTaskAC])
+    const changeStatus = useCallback((tlID: string, taskID: string, status: TaskStatuses) => {
+        dispatch(changeTaskStatusAC(tlID, taskID, status))
         // setTasks({...tasks, [tlID]: tasks[tlID].map(m => m.id === taskID ? {...m, isDone: checked} : m)})
-    },[dispatch,changeTaskStatusAC])
-    const changeTitle = useCallback ( (tlId: string, taskID: string, title: string) => {
+    }, [dispatch, changeTaskStatusAC])
+    const changeTitle = useCallback((tlId: string, taskID: string, title: string) => {
         dispatch(changeTaskTitleAC(tlId, taskID, title))
         // setTasks({...tasks, [tlId]: tasks[tlId].map(m => m.id === taskID ? {...m, title: title} : m)})
 
-    },[dispatch,changeTaskTitleAC])
+    }, [dispatch, changeTaskTitleAC])
 
 
-    const changeFilter =  useCallback ((tlId: string, value: FilterValueType) => {
+    const changeFilter = useCallback((tlId: string, value: FilterValueType) => {
         dispatch(ChangeFilterAc(tlId, value))
         // setTl(tl.map(m => m.id === tlId ? {...m, filter: value} : m))
-    },[dispatch,ChangeFilterAc])
-    const changeTitleTl = useCallback ( (tlId: string, title: string) => {
+    }, [dispatch, ChangeFilterAc])
+    const changeTitleTl = useCallback((tlId: string, title: string) => {
         dispatch(ReNameAc(tlId, title))
         // setTl(tl.map(m => m.id === tlId ? {...m, title: title} : m))
-    },[dispatch,ReNameAc])
+    }, [dispatch, ReNameAc])
     const addTl = useCallback((title: string) => {
         let action = AddTlAc(title)
         dispatch(action)
@@ -68,14 +75,14 @@ function AppWithRedux() {
         // setTl([{id: newID, title, filter: 'ALL'}, ...tl])
         // setTasks({...tasks, [newID]: []})
     }, [dispatch, AddTlAc])
-    const removeTl = useCallback ( (tlID: string) => {
+    const removeTl = useCallback((tlID: string) => {
         dispatch(RemoveTLAc(tlID))
 
         // setTl(tl.filter(f => f.id !== tlID))
         // delete tasks[tlID]
         // проверка на удаление объектов в удаленном массиве
         // console.log(tasks[tlID2])
-    },[dispatch,RemoveTLAc])
+    }, [dispatch, RemoveTLAc])
 
 
     return (

@@ -1,6 +1,7 @@
 import {TasksStateType} from "../Todolist";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./tasksReducer";
 import {AddTlAc, RemoveTLAc} from "./todoListReducer";
+import {TaskPriorities, TaskStatuses} from "../api/todolistApi";
 
 
 let startState: TasksStateType
@@ -8,14 +9,68 @@ let startState: TasksStateType
 beforeEach(() => {
     startState = {
         'tlID1': [
-            {id: '1', title: 'HTML', isDone: true},
-            {id: '2', title: 'CSS', isDone: true},
-            {id: '3', title: 'SASS', isDone: true},
+            {
+                id: '1', title: 'HTML', status: TaskStatuses.Completed,
+                todoListId: 'tlID1',
+                startDate: null,
+                deadline: null,
+                addedDate: '',
+                order: 0,
+                priority: TaskPriorities.Low,
+                description: null
+            },
+            {
+                id: '2', title: 'CSS', status: TaskStatuses.Completed,
+                todoListId: 'tlID1',
+                startDate: null,
+                deadline: null,
+                addedDate: '',
+                order: 0,
+                priority: TaskPriorities.Low,
+                description: null
+            },
+            {
+                id: '3', title: 'SASS', status: TaskStatuses.Completed,
+                todoListId: 'tlID1',
+                startDate: null,
+                deadline: null,
+                addedDate: '',
+                order: 0,
+                priority: TaskPriorities.Low,
+                description: null
+            },
         ],
         'tlID2': [
-            {id: '1', title: 'JS', isDone: true},
-            {id: '2', title: 'REACT', isDone: true},
-            {id: '3', title: 'REDUX', isDone: true},
+            {
+                id: '1', title: 'JS', status: TaskStatuses.Completed,
+                todoListId: 'tlID2',
+                startDate: null,
+                deadline: null,
+                addedDate: '',
+                order: 0,
+                priority: TaskPriorities.Low,
+                description: null
+            },
+            {
+                id: '2', title: 'REACT', status: TaskStatuses.Completed,
+                todoListId: 'tlID2',
+                startDate: null,
+                deadline: null,
+                addedDate: '',
+                order: 0,
+                priority: TaskPriorities.Low,
+                description: null
+            },
+            {
+                id: '3', title: 'REDUX', status: TaskStatuses.Completed,
+                todoListId: 'tlID2',
+                startDate: null,
+                deadline: null,
+                addedDate: '',
+                order: 0,
+                priority: TaskPriorities.Low,
+                description: null
+            },
         ],
     };
 })
@@ -41,11 +96,11 @@ test('add task', () => {
 })
 test('Change task status', () => {
 
-    const action = changeTaskStatusAC('tlID2', '2', false);
+    const action = changeTaskStatusAC('tlID2', '2', TaskStatuses.New);
     let endState = tasksReducer(startState, action)
 
-    expect(endState['tlID2'][1].isDone).toBe(false)
-    expect(endState['tlID1'][1].isDone).toBe(true)
+    expect(endState['tlID2'][1].status).toBe(TaskStatuses.New)
+    expect(endState['tlID1'][1].status).toBe(TaskStatuses.New)
 })
 test('Change task title', () => {
 

@@ -1,16 +1,17 @@
-import React, {ChangeEvent, useCallback} from 'react';
+import React, {ChangeEvent, useCallback, useEffect} from 'react';
 import s from "../../Todolist.module.css";
 import {IconButton, Switch} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditableSpan from "../EditableSpan/EditableSpan";
-import {TaskType} from "../../Todolist";
+import {TaskStatuses} from "../../api/todolistApi";
+import {TasksType} from "../../state/tasksReducer";
 
 
 type PropsType = {
-    task: TaskType
+    task: TasksType
     removeTaskHandler: (taskID: string) => void
     changeTitleHandler: (taskID: string, title: string) => void
-    changeStatusHandler: (taskID: string, newValueChecked: boolean) => void
+    changeStatusHandler: (taskID: string, status: number) => void
 }
 
 const Task = React.memo((props: PropsType) => {
@@ -18,7 +19,7 @@ const Task = React.memo((props: PropsType) => {
     console.log('task')
 
     const changeStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        props.changeStatusHandler(props.task.id, e.currentTarget.checked)
+        props.changeStatusHandler(props.task.id, e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New)
     }, [props.changeStatusHandler, props.task.id])
 
 
@@ -32,11 +33,12 @@ const Task = React.memo((props: PropsType) => {
 
     return (
         <div>
-            <li key={props.task.id} className={props.task.isDone ? s.isDone : ''}>
+            <li key={props.task.id} className={props.task.status === TaskStatuses.Completed ? s.isDone : ''}>
                 <IconButton aria-label="delete" size="small">
                     <DeleteIcon onClick={removeTaskHandler} fontSize="inherit"/>
                 </IconButton>
-                <Switch color={'success'} checked={props.task.isDone} onChange={changeStatusHandler}/>
+                <Switch color={'success'} checked={props.task.status === TaskStatuses.Completed}
+                        onChange={changeStatusHandler}/>
                 <EditableSpan oldTitle={props.task.title}
                               changeTitleHandler={changeTitleHandler}/>
             </li>

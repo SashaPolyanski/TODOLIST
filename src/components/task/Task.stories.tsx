@@ -1,10 +1,8 @@
-import React, {useState} from 'react';
-import {ComponentStory, ComponentMeta} from '@storybook/react';
-
-import AddItemForm from "../addItemForm/AddItemForm";
+import React from 'react';
+import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import Task from "./Task";
-import {TaskType} from "../../Todolist";
+import {TaskPriorities, TaskStatuses} from "../../api/todolistApi";
 
 export default {
     title: 'TODOLIST/Task',
@@ -21,11 +19,27 @@ const Template: ComponentStory<typeof Task> = (args) => <Task {...args} />;
 
 export const TaskIsNotDoneStory = Template.bind({});
 TaskIsNotDoneStory.args = {
-    task: {id: '123123', isDone: false, title: 'false'},
+    task: {
+        id: '123123', status: TaskStatuses.New, title: 'false', todoListId: '',
+        startDate: null,
+        deadline: null,
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        description: null
+    },
 };
 export const TaskIsDoneStory = Template.bind({});
 TaskIsDoneStory.args = {
-    task: {id: '123123', isDone: true, title: 'true'},
+    task: {
+        id: '123123', status: TaskStatuses.Completed, title: 'true', todoListId: '',
+        startDate: null,
+        deadline: null,
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        description: null
+    },
 };
 
 // const Template: ComponentStory<typeof Task> = () => {

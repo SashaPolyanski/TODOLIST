@@ -1,11 +1,10 @@
 import {v1} from "uuid";
-import {TlType} from "../App";
-import {AddTlAc, ChangeFilterAc, RemoveTLAc, ReNameAc, todoListReducer} from "./todoListReducer";
+import {AddTlAc, ChangeFilterAc, RemoveTLAc, ReNameAc, TodolistDomainType, todoListReducer} from "./todoListReducer";
 
 
 let tlID1: string
 let tlID2: string
-let startState: Array<TlType>
+let startState: Array<TodolistDomainType>
 
 beforeEach(() => {
     tlID1 = v1();
@@ -13,8 +12,8 @@ beforeEach(() => {
 
 
     startState = [
-        {id: tlID1, title: 'what to learn', filter: 'ALL'},
-        {id: tlID2, title: 'what to buy', filter: 'ALL'}
+        {id: tlID1, title: 'what to learn', filter: 'ALL', addedDate: '', order: 0},
+        {id: tlID2, title: 'what to buy', filter: 'ALL', addedDate: '', order: 0}
     ]
 })
 

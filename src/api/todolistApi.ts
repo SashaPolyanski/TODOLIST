@@ -8,11 +8,27 @@ let instance = axios.create({
         'API-KEY': '4933b13e-4b01-48e2-aaf4-8530ec473dd2'
     }
 })
-type TodoType = {
+
+
+export type TodoType = {
     id: string
     title: string
     addedDate: string
     order: number
+}
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3,
+
+}
+export enum TaskPriorities {
+    Low = 0,
+    Moddle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
 }
 
 type CommonResponseType<T = { }> = {
@@ -22,15 +38,15 @@ type CommonResponseType<T = { }> = {
     data: T
 }
 
-type CreateAndRemoveTaskType = {
+export type CreateAndRemoveTaskType = {
     addedDate: string
     deadline: null
     description: null
     id: string
     order: number
-    priority: number
+    priority: TaskPriorities
     startDate: null
-    status: number
+    status: TaskStatuses
     title: string
     todoListId: string
 }

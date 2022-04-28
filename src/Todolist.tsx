@@ -1,26 +1,24 @@
-import React, {useCallback} from 'react';
-import {FilterValueType} from "./App";
+import React, {useCallback, useEffect} from 'react';
 import AddItemForm from "./components/addItemForm/AddItemForm";
 import EditableSpan from "./components/EditableSpan/EditableSpan";
 import {Button} from "@mui/material";
 import Task from "./components/task/Task";
+import {fetchTasksThunkCreator, RemoveTaskThunkCreator, TasksType} from "./state/tasksReducer";
+import {TaskStatuses} from "./api/todolistApi";
+import {FilterValueType} from "./state/todoListReducer";
+import {useDispatch} from "react-redux";
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
 export type TasksStateType = {
-    [key: string]: Array<TaskType>
+    [key: string]: Array<TasksType>
 }
 
 type PropsType = {
     title: string
-    tasks: Array<TaskType>
+    tasks: Array<TasksType>
     removeTask: (tlID: string, taskID: string) => void
     changeFilter: (tlId: string, value: FilterValueType) => void
     addTask: (tlID: string, title: string) => void
-    changeStatus: (tlID: string, taskID: string, checked: boolean) => void
+    changeStatus: (tlID: string, taskID: string, status: number) => void
     removeTl: (tlID: string) => void
     changeTitle: (tlID: string, taskID: string, title: string) => void
     changeTitleTl: (tlId: string, title: string) => void
@@ -30,12 +28,14 @@ type PropsType = {
 
 
 export const Todolist = React.memo((props: PropsType) => {
-    console.log('todoList')
+    let dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(fetchTasksThunkCreator(props.tlId))
+    }, [])
 
     const changeFilterHandler = useCallback((value: FilterValueType) => props.changeFilter(props.tlId, value), [props.changeFilter, props.tlId])
 
-
-    const removeTaskHandler = useCallback((taskID: string) => props.removeTask(props.tlId, taskID), [props.removeTask, props.tlId])
+    const removeTaskHandler = useCallback((taskID: string) => dispatch(RemoveTaskThunkCreator(taskID, props.tlId)),[])
 
     const callBackHandler = useCallback((title: string) => {
         props.addTask(props.tlId, title)
@@ -45,11 +45,11 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const changeTitleHandler = useCallback((taskID: string, title: string) => {
         props.changeTitle(props.tlId, taskID, title)
-    }, [props.changeTitle,props.tlId])
+    }, [props.changeTitle, props.tlId])
 
 
-    const changeStatusHandler = useCallback((taskID: string, newIsDoneValue: boolean) => {
-        props.changeStatus(props.tlId, taskID, newIsDoneValue)
+    const changeStatusHandler = useCallback((taskID: string, status: number) => {
+        props.changeStatus(props.tlId, taskID, status)
     }, [props.changeStatus, props.tlId])
 
 
@@ -60,10 +60,10 @@ export const Todolist = React.memo((props: PropsType) => {
 
     let filteredTask = props.tasks
     if (props.filter === 'ACTIVE') {
-        filteredTask = filteredTask.filter(f => !f.isDone)
+        filteredTask = filteredTask.filter(f => f.status === TaskStatuses.InProgress)
     }
     if (props.filter === 'COMPLETED') {
-        filteredTask = filteredTask.filter(f => f.isDone)
+        filteredTask = filteredTask.filter(f => f.status === TaskStatuses.Completed)
     }
 
     return <div>
@@ -73,6 +73,7 @@ export const Todolist = React.memo((props: PropsType) => {
             <AddItemForm addItem={callBackHandler}/>
         </div>
         <ul>
+            {/*если, при загруке страницы все содержимое пропадает, то это приходит значение undefined*/}
             {filteredTask.map((m) => {
                 // const removeTaskHandler =  () => props.removeTask(m.id)
                 // в мапе useCallback не используется
