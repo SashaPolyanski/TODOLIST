@@ -114,7 +114,7 @@ test('Change task title', () => {
 test('add tl', () => {
 
 
-    const action = AddTlAc('new tl');
+    const action = AddTlAc('new tl', 'asasd');
     let endState = tasksReducer(startState, action)
 
     const keys = Object.keys(endState)

@@ -19,6 +19,18 @@ type RemoveTaskType = {
     id: string
     tlID: string
 }
+export type TasksType = {
+    addedDate: string
+    deadline: null
+    description: null
+    id: string
+    order: number
+    priority: number
+    startDate: null
+    status: number
+    title: string
+    todoListId: string
+}
 type addTaskType = {
     type: 'ADD-TASK'
     task: TasksType
@@ -99,12 +111,12 @@ export const tasksReducer = (state = initialState, action: ActionsType): TasksSt
         case "ADD-TL": {
             return {
                 ...state,
-                [action.payload.tlID]: []
+                [action.payload.tlId]: []
             }
         }
         case "REMOVE-TL": {
             let copy = {...state}
-            delete copy[action.payload.tlID1]
+            delete copy[action.payload.tlID]
             return copy
 
         }
@@ -135,6 +147,7 @@ export const changeTaskTitleAC = (tlID: string, id: string, title: string): chan
         type: 'CHANGE-TASK-TITLE', tlID, id, title
     }
 }
+type SetTasksType = ReturnType<typeof GetTasksAc>
 export const GetTasksAc = (tlID: string, tasks: TasksType[]) => {
     return {
         type: 'GET-TASKS',
@@ -142,22 +155,11 @@ export const GetTasksAc = (tlID: string, tasks: TasksType[]) => {
         tasks
     } as const
 }
-type SetTasksType = ReturnType<typeof GetTasksAc>
-export type TasksType = {
-    addedDate: string
-    deadline: null
-    description: null
-    id: string
-    order: number
-    priority: number
-    startDate: null
-    status: number
-    title: string
-    todoListId: string
-}
+
+
 
 //thunk
-export const fetchTasksThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
+export const FetchTasksThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
     tasksApi.getTasks(tlId)
         .then((res) => {
             dispatch(GetTasksAc(tlId, res.data.items))

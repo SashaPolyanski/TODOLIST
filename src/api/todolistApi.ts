@@ -51,18 +51,6 @@ export type CreateAndRemoveTaskType = {
     todoListId: string
 }
 
-type ChangeTitleTaskType = {
-    id: string
-    title: string
-    description: null
-    todoListId: string
-    order: number
-    status: number
-    priority: number
-    startDate: null
-    deadline: null
-    addedDate: string
-}
 export type UpdateTaskModelType = {
     title: string
     description: null

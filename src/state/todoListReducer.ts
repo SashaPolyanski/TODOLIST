@@ -24,10 +24,16 @@ export const todoListReducer = (state = initialState, action: ActionsType): Arra
 
         }
         case 'REMOVE-TL' : {
-            return state.filter(f => f.id !== action.payload.tlID1)
+            return state.filter(f => f.id !== action.payload.tlID)
         }
         case 'ADD-TL' : {
-            return [{id: action.payload.tlID, title: action.payload.title, filter: 'ALL' , addedDate: '', order: 0}, ...state]
+            return [{
+                id: action.payload.tlId,
+                title: action.payload.title,
+                filter: 'ALL',
+                addedDate: '',
+                order: 0
+            }, ...state]
         }
         case "RENAME-TL": {
             return state.map(m => m.id === action.payload.id ? {...m, title: action.payload.title} : m)
@@ -50,20 +56,20 @@ type ReNameAcType = ReturnType<typeof ReNameAc>
 type ChangeFilterAcType = ReturnType<typeof ChangeFilterAc>
 export type SetTodosType = ReturnType<typeof SetTodosAc>
 
-export const RemoveTLAc = (tlID1: string) => {
+export const RemoveTLAc = (tlID: string) => {
     return {
         type: 'REMOVE-TL',
         payload: {
-            tlID1
+            tlID
         }
     } as const
 }
-export const AddTlAc = (title: string) => {
+export const AddTlAc = (title: string, tlId: string) => {
     return {
         type: 'ADD-TL',
         payload: {
             title,
-            tlID: v1()
+            tlId
         }
     } as const
 }
@@ -104,10 +110,31 @@ export const SetTodosAc = (todos: Array<TodosType>) => {
 
 //thunk, thunk принимает в себя первым параметром dispatch, вторым параметром принимает в себя getState, третий - экстра аргументы
 //thunk предназначен для side effect, dispatch action
-export const fetchTodosThunk = (dispatch: Dispatch, getState: AppRootStateType) => {
+export const FetchTodosThunkCreator = () => (dispatch: Dispatch, getState: AppRootStateType) => {
     todolistApi.getTodos()
         .then((res) => {
             dispatch(SetTodosAc(res.data))
         })
-}
 
+}
+export const CreateTodoThunkCreator = (title: string) => (dispatch: Dispatch) => {
+    todolistApi.createTodo(title)
+        .then((res)=>{
+            //Что бы не было конфликта id на сервере и в стейте, мы с стейт должны засетать ту id, которая пришла с сервера
+            //Генерировать id с помощью v1() нет смысла, на сервере будет одна, в стейте другая
+            dispatch(AddTlAc(title, res.data.data.item.id))
+        })
+
+}
+export const RemoveTodoThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
+    todolistApi.deleteTodo(tlId)
+        .then(()=>{
+            dispatch(RemoveTLAc(tlId))
+        })
+}
+export const ChangeTodoTitleThunkCreator = (tlId: string, title: string) => (dispatch: Dispatch) => {
+    todolistApi.updateTodoTitle(tlId, title)
+        .then((res)=> {
+            dispatch(ReNameAc(tlId, title))
+        })
+}

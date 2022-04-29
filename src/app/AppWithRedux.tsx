@@ -6,10 +6,10 @@ import PrimarySearchAppBar from "../components/AppBar";
 import {Container, Grid, Paper} from "@mui/material";
 import {
     AddTlAc,
-    ChangeFilterAc,
-    fetchTodosThunk,
+    ChangeFilterAc, ChangeTodoTitleThunkCreator, CreateTodoThunkCreator,
+    FetchTodosThunkCreator,
     FilterValueType,
-    RemoveTLAc,
+    RemoveTLAc, RemoveTodoThunkCreator,
     ReNameAc,
     TodolistDomainType
 } from "../state/todoListReducer";
@@ -18,7 +18,7 @@ import {
     ChangeTaskCheckboxThunkCreator,
     changeTaskStatusAC,
     changeTaskTitleAC, ChangeTaskTitleThunkCreator,
-    removeTaskAC
+    removeTaskAC, RemoveTaskThunkCreator
 } from "../state/tasksReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
@@ -27,7 +27,7 @@ import {TaskStatuses} from "../api/todolistApi";
 
 function AppWithRedux() {
     useEffect(() => {
-        dispatch(fetchTodosThunk)
+        dispatch(FetchTodosThunkCreator())
     },[])
 
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
@@ -42,9 +42,8 @@ function AppWithRedux() {
     const removeTask = useCallback((tlID: string, taskID: string) => {
         //Фиксируем изменненное значение, делаем копию наших таскс, находим наш ключь и перезатираем его новым объектом тастс с этим ключем, вызываем фильтр и фильтруем таски
         // setTasks({...tasks, [tlID]: tasks[tlID].filter(f => f.id !== taskID)})
-        //Создаем action и диспачим его в наш редюсек
-        let action = removeTaskAC(taskID, tlID)
-        dispatch(action)
+        //Создаем action и диспачим его в наш редюсер
+        dispatch(RemoveTaskThunkCreator(taskID, tlID))
 
     }, [dispatch, removeTaskAC])
     const addTask = useCallback((tlID: string, title: string) => {
@@ -67,18 +66,14 @@ function AppWithRedux() {
         // setTl(tl.map(m => m.id === tlId ? {...m, filter: value} : m))
     }, [dispatch, ChangeFilterAc])
     const changeTitleTl = useCallback((tlId: string, title: string) => {
-        dispatch(ReNameAc(tlId, title))
+        dispatch(ChangeTodoTitleThunkCreator(tlId, title))
         // setTl(tl.map(m => m.id === tlId ? {...m, title: title} : m))
     }, [dispatch, ReNameAc])
     const addTl = useCallback((title: string) => {
-        let action = AddTlAc(title)
-        dispatch(action)
-        // let newID = v1();
-        // setTl([{id: newID, title, filter: 'ALL'}, ...tl])
-        // setTasks({...tasks, [newID]: []})
+        dispatch(CreateTodoThunkCreator(title))
     }, [dispatch, AddTlAc])
     const removeTl = useCallback((tlID: string) => {
-        dispatch(RemoveTLAc(tlID))
+        dispatch(RemoveTodoThunkCreator(tlID))
 
         // setTl(tl.filter(f => f.id !== tlID))
         // delete tasks[tlID]
@@ -105,7 +100,6 @@ function AppWithRedux() {
                                     <Todolist
                                         tlId={tl.id}
                                         title={tl.title}
-
                                         tasks={tasks[tl.id]}
                                         removeTask={removeTask}
                                         changeFilter={changeFilter}

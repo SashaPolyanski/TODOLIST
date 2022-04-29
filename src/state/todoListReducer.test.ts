@@ -32,7 +32,7 @@ test('correct TL should be add', () => {
     let newTlTitle = 'NewTL'
 
 
-    const endState = todoListReducer(startState, AddTlAc(newTlTitle))
+    const endState = todoListReducer(startState, AddTlAc(newTlTitle, 'asdasd'))
     expect(endState.length).toBe(3);
     expect(endState[0].title).toBe(newTlTitle);
 });
