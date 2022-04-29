@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect} from 'react';
+import React, {ChangeEvent, useCallback} from 'react';
 import s from "../../Todolist.module.css";
 import {IconButton, Switch} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";

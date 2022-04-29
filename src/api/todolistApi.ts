@@ -63,6 +63,14 @@ type ChangeTitleTaskType = {
     deadline: null
     addedDate: string
 }
+export type UpdateTaskModelType = {
+    title: string
+    description: null
+    status: TaskStatuses
+    priority: TaskPriorities
+    startDate: null
+    deadline: null
+}
 
 type TasksType = {
     [key: string]: Array<CreateAndRemoveTaskType>
@@ -91,12 +99,12 @@ export const tasksApi = {
         return instance.get<TasksType>(`/todo-lists/${todolistId}/tasks`)
     },
     createTask(todolistId: string, title: string){
-        return instance.post<CreateAndRemoveTaskType>(`/todo-lists/${todolistId}/tasks`,{title})
+        return instance.post<CommonResponseType<{item: CreateAndRemoveTaskType}>>(`/todo-lists/${todolistId}/tasks`,{title})
     },
     deleteTask(todolistId: string, taskId: string){
         return instance.delete<CreateAndRemoveTaskType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
     },
-    updateTaskTitle(todolistId: string, taskId: string, title: string){
-        return instance.put<ChangeTitleTaskType>(`/todo-lists/${todolistId}/tasks/${taskId}`, {title})
+    updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType){
+        return instance.put<UpdateTaskModelType>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     }
 }

@@ -85,15 +85,15 @@ test('delete task', () => {
     expect(endState['tlID2'][1].id).toBe('3')
     expect(endState['tlID2'].length).toBe(2)
 })
-test('add task', () => {
-
-    const action = addTaskAC('juice', 'tlID2');
-    let endState = tasksReducer(startState, action)
-
-    expect(endState['tlID2'].length).toBe(4)
-    expect(endState['tlID2'][0].title).toBe('juice')
-    expect(endState['tlID2'][0].id).toBeDefined()
-})
+// test('add task', () => {
+//
+//     const action = addTaskAC('juice', 'tlID2');
+//     let endState = tasksReducer(startState, action)
+//
+//     expect(endState['tlID2'].length).toBe(4)
+//     expect(endState['tlID2'][0].title).toBe('juice')
+//     expect(endState['tlID2'][0].id).toBeDefined()
+// })
 test('Change task status', () => {
 
     const action = changeTaskStatusAC('tlID2', '2', TaskStatuses.New);

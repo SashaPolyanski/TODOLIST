@@ -13,14 +13,16 @@ import {
     ReNameAc,
     TodolistDomainType
 } from "../state/todoListReducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasksReducer";
+import {
+    AddTaskThunkCreator,
+    ChangeTaskCheckboxThunkCreator,
+    changeTaskStatusAC,
+    changeTaskTitleAC, ChangeTaskTitleThunkCreator,
+    removeTaskAC
+} from "../state/tasksReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {TaskStatuses} from "../api/todolistApi";
-
-
-
-
 
 
 function AppWithRedux() {
@@ -46,15 +48,15 @@ function AppWithRedux() {
 
     }, [dispatch, removeTaskAC])
     const addTask = useCallback((tlID: string, title: string) => {
-        dispatch(addTaskAC(title, tlID))
+        dispatch(AddTaskThunkCreator(tlID, title))
         // setTasks({...tasks, [tlID]: [{id: v1(), title, isDone: false}, ...tasks[tlID]]})
-    }, [dispatch, addTaskAC])
+    }, [])
     const changeStatus = useCallback((tlID: string, taskID: string, status: TaskStatuses) => {
-        dispatch(changeTaskStatusAC(tlID, taskID, status))
+        dispatch(ChangeTaskCheckboxThunkCreator(tlID, taskID, status))
         // setTasks({...tasks, [tlID]: tasks[tlID].map(m => m.id === taskID ? {...m, isDone: checked} : m)})
     }, [dispatch, changeTaskStatusAC])
     const changeTitle = useCallback((tlId: string, taskID: string, title: string) => {
-        dispatch(changeTaskTitleAC(tlId, taskID, title))
+        dispatch(ChangeTaskTitleThunkCreator(tlId, taskID, title))
         // setTasks({...tasks, [tlId]: tasks[tlId].map(m => m.id === taskID ? {...m, title: title} : m)})
 
     }, [dispatch, changeTaskTitleAC])
