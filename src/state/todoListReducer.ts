@@ -1,13 +1,7 @@
-import {v1} from "uuid";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "./store";
 import {todolistApi} from "../api/todolistApi";
-
-export type FilterValueType = 'ALL' | 'COMPLETED' | 'ACTIVE'
-
-export type TodolistDomainType = TodosType & {
-    filter: FilterValueType
-}
+import {RequestStatusType, setStatus} from "../app/appReducer";
 
 
 const initialState: Array<TodolistDomainType> = []
@@ -15,32 +9,30 @@ const initialState: Array<TodolistDomainType> = []
 
 export const todoListReducer = (state = initialState, action: ActionsType): Array<TodolistDomainType> => {
     switch (action.type) {
-        case "SET-TODOS": {
-            return action.todos.map(t => {
+        case "SET-TODOS":
+            return action.todos.map(t => ({...t, filter: 'ALL', entityStatus: 'idle'}))
 
-                return {...t, filter: 'ALL'}
-
-            })
-
-        }
-        case 'REMOVE-TL' : {
+        case 'REMOVE-TL' :
             return state.filter(f => f.id !== action.payload.tlID)
-        }
-        case 'ADD-TL' : {
+        case "APP/SET-ENTITY-STATUS":
+            return state.map(f=>f.id === action.id ? {...f,entityStatus: action.entity} : f)
+
+        case 'ADD-TL' :
             return [{
                 id: action.payload.tlId,
                 title: action.payload.title,
                 filter: 'ALL',
                 addedDate: '',
-                order: 0
+                order: 0,
+                entityStatus: 'idle'
             }, ...state]
-        }
-        case "RENAME-TL": {
+
+        case "RENAME-TL":
             return state.map(m => m.id === action.payload.id ? {...m, title: action.payload.title} : m)
-        }
-        case "CHANGE-FILTER": {
+
+        case "CHANGE-FILTER":
             return state.map(m => m.id === action.payload.id ? {...m, filter: action.payload.value} : m)
-        }
+
 
         default:
             return state
@@ -48,14 +40,25 @@ export const todoListReducer = (state = initialState, action: ActionsType): Arra
     }
 }
 
-
-type ActionsType = RemoveTLAcType | AddTlAcType | ReNameAcType | ChangeFilterAcType | SetTodosType
+//types
+type ActionsType =
+    ReturnType<typeof RemoveTLAc> |
+    ReturnType<typeof AddTlAc> |
+    ReturnType<typeof ReNameAc> |
+    ReturnType<typeof ChangeFilterAc> |
+    ReturnType<typeof SetTodosAc> |
+    ReturnType<typeof setEntityStatus>
 export type RemoveTLAcType = ReturnType<typeof RemoveTLAc>
-export  type AddTlAcType = ReturnType<typeof AddTlAc>
-type ReNameAcType = ReturnType<typeof ReNameAc>
-type ChangeFilterAcType = ReturnType<typeof ChangeFilterAc>
+export type AddTlAcType = ReturnType<typeof AddTlAc>
 export type SetTodosType = ReturnType<typeof SetTodosAc>
+export type FilterValueType = 'ALL' | 'COMPLETED' | 'ACTIVE'
+export type TodolistDomainType = TodosType & {
+    filter: FilterValueType
+    entityStatus: RequestStatusType
+}
 
+
+//Actions create
 export const RemoveTLAc = (tlID: string) => {
     return {
         type: 'REMOVE-TL',
@@ -106,35 +109,54 @@ export const SetTodosAc = (todos: Array<TodosType>) => {
     } as const
 
 }
+export const setEntityStatus = (id: string, entity: RequestStatusType) => {
+    return {
+        type: 'APP/SET-ENTITY-STATUS',
+        id,
+        entity
+
+    } as const
+}
 
 
 //thunk, thunk принимает в себя первым параметром dispatch, вторым параметром принимает в себя getState, третий - экстра аргументы
 //thunk предназначен для side effect, dispatch action
 export const FetchTodosThunkCreator = () => (dispatch: Dispatch, getState: AppRootStateType) => {
+    dispatch(setStatus('loading'))
     todolistApi.getTodos()
         .then((res) => {
             dispatch(SetTodosAc(res.data))
+            dispatch(setStatus('succeeded'))
         })
 
 }
 export const CreateTodoThunkCreator = (title: string) => (dispatch: Dispatch) => {
+    dispatch(setStatus('loading'))
+
     todolistApi.createTodo(title)
-        .then((res)=>{
+        .then((res) => {
             //Что бы не было конфликта id на сервере и в стейте, мы с стейт должны засетать ту id, которая пришла с сервера
             //Генерировать id с помощью v1() нет смысла, на сервере будет одна, в стейте другая
             dispatch(AddTlAc(title, res.data.data.item.id))
+            dispatch(setStatus('succeeded'))
         })
 
 }
 export const RemoveTodoThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
+    dispatch(setStatus('loading'))
+    dispatch(setEntityStatus(tlId,'loading'))
     todolistApi.deleteTodo(tlId)
-        .then(()=>{
+        .then(() => {
             dispatch(RemoveTLAc(tlId))
+            dispatch(setStatus('succeeded'))
+            dispatch(setEntityStatus(tlId,'succeeded'))
         })
 }
 export const ChangeTodoTitleThunkCreator = (tlId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setStatus('loading'))
     todolistApi.updateTodoTitle(tlId, title)
-        .then((res)=> {
+        .then((res) => {
             dispatch(ReNameAc(tlId, title))
+            dispatch(setStatus('succeeded'))
         })
 }

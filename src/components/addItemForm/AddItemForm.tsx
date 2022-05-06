@@ -3,9 +3,12 @@ import s from "../../Todolist.module.css";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";
+import {RequestStatusType} from "../../app/appReducer";
 
 type PropsType = {
     addItem: ( title: string) => void
+    entity?: RequestStatusType
+
 }
 
 export const AddItemForm =React.memo ((props: PropsType) => {
@@ -41,7 +44,7 @@ export const AddItemForm =React.memo ((props: PropsType) => {
             </IconButton>
             <TextField color={error ? 'error' : 'primary'} id="standard-basic" variant="standard" size={'small'} value={title} onKeyPress={onKeyPressHandler}
                        onChange={onChangeTitleHandler}/>
-            <Button variant={'contained'} style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={addTaskHandler}>+</Button>
+            <Button disabled={props.entity === 'loading'} variant={'contained'}  style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={addTaskHandler}>+</Button>
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>
     );

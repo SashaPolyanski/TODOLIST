@@ -8,16 +8,15 @@ type PropsType = {
 
 
 const EditableSpan = React.memo ((props: PropsType) => {
-    console.log('editable span')
+    // console.log('editable span')
     let [title, setTitle] = useState(props.oldTitle)
     let [edit, setEdit] = useState(false)
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
-        console.log(title)
     }
 
     const editHandler = () => {
-        props.changeTitleHandler(title)
+        props.changeTitleHandler(props.oldTitle)
         setEdit(!edit)
     }
     const editHandlerFalse = () => {
@@ -25,11 +24,11 @@ const EditableSpan = React.memo ((props: PropsType) => {
         setEdit(false)
     }
     const editHandlerInput = useCallback ((e: KeyboardEvent<HTMLSpanElement>) => {
-        if (e.key === 'Enter')
+        if (e.key === 'Enter') {
             setEdit(false)
-        props.changeTitleHandler(title)
+            props.changeTitleHandler(title)
+        }
     },[props.changeTitleHandler])
-
 
     return (
         <span onDoubleClick={editHandler} onBlur={editHandlerFalse} onKeyPress={editHandlerInput} >

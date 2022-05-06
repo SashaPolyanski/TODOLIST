@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditableSpan from "../EditableSpan/EditableSpan";
 import {TaskStatuses} from "../../api/todolistApi";
 import {TasksType} from "../../state/tasksReducer";
+import {RequestStatusType} from "../../app/appReducer";
 
 
 type PropsType = {
@@ -12,6 +13,7 @@ type PropsType = {
     removeTaskHandler: (taskID: string) => void
     changeTitleHandler: (taskID: string, title: string) => void
     changeStatusHandler: (taskID: string, status: number) => void
+    entity?: RequestStatusType
 }
 
 const Task = React.memo((props: PropsType) => {
@@ -24,8 +26,9 @@ const Task = React.memo((props: PropsType) => {
 
 
     const changeTitleHandler = useCallback((title: string) => {
+        console.log({title})
         props.changeTitleHandler(props.task.id, title)
-    }, [props.changeTitleHandler, props.task.id])
+    }, [props])
 
 
     const removeTaskHandler = useCallback(() => props.removeTaskHandler(props.task.id), [props.removeTaskHandler, props.task.id])
@@ -37,7 +40,7 @@ const Task = React.memo((props: PropsType) => {
                 <IconButton aria-label="delete" size="small">
                     <DeleteIcon onClick={removeTaskHandler} fontSize="inherit"/>
                 </IconButton>
-                <Switch color={'success'} checked={props.task.status === TaskStatuses.Completed}
+                <Switch color={'success'} checked={props.task.status === TaskStatuses.Completed} disabled={props.entity==='loading'}
                         onChange={changeStatusHandler}/>
                 <EditableSpan oldTitle={props.task.title}
                               changeTitleHandler={changeTitleHandler}/>

@@ -1,24 +1,12 @@
 import {TasksStateType} from "../Todolist";
-import {AddTlAcType, RemoveTLAcType, SetTodosType} from "./todoListReducer";
+import {AddTlAcType, RemoveTLAcType, setEntityStatus, SetTodosType} from "./todoListReducer";
 import {Dispatch} from "redux";
 import {tasksApi, TaskStatuses, UpdateTaskModelType} from "../api/todolistApi";
 import {AppRootStateType} from "./store";
+import {setError, setStatus} from "../app/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
 
 
-type ActionsType =
-    RemoveTaskType
-    | addTaskType
-    | changeTaskStatus
-    | changeTaskTitle
-    | AddTlAcType
-    | RemoveTLAcType
-    | SetTodosType
-    | SetTasksType
-type RemoveTaskType = {
-    type: 'REMOVE-TASK'
-    id: string
-    tlID: string
-}
 export type TasksType = {
     addedDate: string
     deadline: null
@@ -31,33 +19,30 @@ export type TasksType = {
     title: string
     todoListId: string
 }
-type addTaskType = {
-    type: 'ADD-TASK'
-    task: TasksType
-}
-type changeTaskStatus = {
-    type: 'CHANGE-TASK-STATUS'
-    tlID: string
-    id: string
-    status: TaskStatuses
-}
-type changeTaskTitle = {
-    type: 'CHANGE-TASK-TITLE'
-    tlID: string
-    id: string
-    title: string
-}
+
+type ActionsType =
+    ReturnType<typeof removeTaskAC>
+    | ReturnType<typeof addTaskAC>
+    | ReturnType<typeof changeTaskStatusAC>
+    | ReturnType<typeof changeTaskTitleAC>
+    | AddTlAcType
+    | RemoveTLAcType
+    | SetTodosType
+    | ReturnType<typeof GetTasksAc>
+    | ReturnType<typeof UpdateTaskAc>
+
 
 const initialState: TasksStateType = {}
 
 export const tasksReducer = (state = initialState, action: ActionsType): TasksStateType => {
     switch (action.type) {
         case "GET-TASKS": {
-            debugger
-            let stateCopy = {...state}
-            debugger
-            stateCopy[action.tlID] = action.tasks
-            return stateCopy
+            // let stateCopy = {...state}
+            // stateCopy[action.tlID] = action.tasks
+            // return stateCopy
+            return {
+                ...state, [action.tlID]: action.tasks
+            }
         }
         case "SET-TODOS": {
             //Делаем для того, что бы убрать undefined при получениее тасок, что бы проект нормально отрисавался
@@ -88,12 +73,20 @@ export const tasksReducer = (state = initialState, action: ActionsType): TasksSt
             //     todoListId: ''
             // }
             //
-            let copyState = {...state}
-            const task = copyState[action.task.todoListId]
-            const newTasks = [action.task, ...task]
-            copyState[action.task.todoListId] = newTasks
-            return copyState
+            // let copyState = {...state}
+            // const task = copyState[action.task.todoListId]
+            // const newTasks = [action.task, ...task]
+            // copyState[action.task.todoListId] = newTasks
+            // return copyState
+            return {...state, [action.task.todoListId]: [action.task, ...state[action.task.todoListId]]}
 
+
+        }
+        case 'UPDATE-TASK' : {
+            return {
+                ...state,
+                [action.tlID]: state[action.tlID].map(m => m.id === action.taskID ? {...m, ...action.model} : m)
+            }
 
         }
         case 'CHANGE-TASK-STATUS' : {
@@ -120,34 +113,35 @@ export const tasksReducer = (state = initialState, action: ActionsType): TasksSt
             return copy
 
         }
+
         default:
             return state
     }
 
 }
 
-export const removeTaskAC = (id: string, tlID: string): RemoveTaskType => {
+export const removeTaskAC = (id: string, tlID: string) => {
     return {
         type: 'REMOVE-TASK', id, tlID
 
-    }
+    } as const
 }
-export const addTaskAC = (task: TasksType): addTaskType => {
+export const addTaskAC = (task: TasksType) => {
     return {
         type: 'ADD-TASK', task
-    }
+    } as const
 }
-export const changeTaskStatusAC = (tlID: string, id: string, status: TaskStatuses): changeTaskStatus => {
+export const changeTaskStatusAC = (tlID: string, id: string, status: TaskStatuses) => {
     return {
         type: "CHANGE-TASK-STATUS", tlID, id, status
-    }
+    } as const
 }
-export const changeTaskTitleAC = (tlID: string, id: string, title: string): changeTaskTitle => {
+export const changeTaskTitleAC = (tlID: string, id: string, title: string) => {
     return {
         type: 'CHANGE-TASK-TITLE', tlID, id, title
-    }
+    } as const
 }
-type SetTasksType = ReturnType<typeof GetTasksAc>
+
 export const GetTasksAc = (tlID: string, tasks: TasksType[]) => {
     return {
         type: 'GET-TASKS',
@@ -155,14 +149,23 @@ export const GetTasksAc = (tlID: string, tasks: TasksType[]) => {
         tasks
     } as const
 }
-
+export const UpdateTaskAc = (tlID: string, taskID: string, model: UpdateTaskModelType) => {
+    return {
+        type: 'UPDATE-TASK',
+        tlID,
+        taskID,
+        model
+    } as const
+}
 
 
 //thunk
 export const FetchTasksThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
+    dispatch(setStatus('loading'))
     tasksApi.getTasks(tlId)
         .then((res) => {
             dispatch(GetTasksAc(tlId, res.data.items))
+            dispatch(setStatus('succeeded'))
         })
 }
 export const RemoveTaskThunkCreator = (id: string, tlID: string) => (dispatch: Dispatch) => {
@@ -172,52 +175,59 @@ export const RemoveTaskThunkCreator = (id: string, tlID: string) => (dispatch: D
         })
 }
 export const AddTaskThunkCreator = (tlId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setStatus('loading'))
+    dispatch(setEntityStatus(tlId, 'loading'))
     tasksApi.createTask(tlId, title)
         .then((res) => {
-            dispatch(addTaskAC(res.data.data.item))
+            if (res.data.resultCode === 0) {
+                dispatch(addTaskAC(res.data.data.item))
+                dispatch(setStatus('succeeded'))
+                dispatch(setEntityStatus(tlId, 'succeeded'))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+
+
         })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
+        })
+
 }
-export const ChangeTaskCheckboxThunkCreator = (tlId: string, taskId: string, status: TaskStatuses) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
+export const UpdateTaskTC = (tlId: string, taskId: string, model: UpdateTaskModelType) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
+    dispatch(setEntityStatus(tlId, 'loading'))
     const allTask = getState().tasks
     const TasksForTodo = allTask[tlId]
     const currentTask = TasksForTodo.find(f => f.id === taskId)
     if (currentTask) {
-        const model: UpdateTaskModelType = {
+        const apiModel: UpdateTaskModelType = {
             title: currentTask.title,
-            status: status,
-            startDate: currentTask.startDate,
-            priority: currentTask.priority,
-            deadline: currentTask.deadline,
-            description: currentTask.description
-        }
-        tasksApi.updateTask(tlId, taskId, model)
-
-            .then((res) => {
-
-                dispatch(changeTaskStatusAC(tlId, taskId, status))
-            })
-    }
-}
-export const ChangeTaskTitleThunkCreator = (tlId: string, taskId: string, title: string) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
-    const allTask = getState().tasks
-    const TasksForTodo = allTask[tlId]
-    const currentTask = TasksForTodo.find(f => f.id === taskId)
-    if (currentTask) {
-        const model: UpdateTaskModelType = {
-            title: title,
             status: currentTask.status,
             startDate: currentTask.startDate,
             priority: currentTask.priority,
             deadline: currentTask.deadline,
-            description: currentTask.description
+            description: currentTask.description,
+            ...model
         }
-        tasksApi.updateTask(tlId, taskId, model)
+
+        tasksApi.updateTask(tlId, taskId, apiModel)
 
             .then((res) => {
-
-                dispatch(changeTaskTitleAC(tlId, taskId, title))
+                if (res.data.resultCode === 0) {
+                    dispatch(UpdateTaskAc(tlId, taskId, apiModel))
+                    dispatch(setEntityStatus(tlId, 'succeeded'))
+                } else {
+                    //что бы не дублировать код, нам нужно часть кода засунуть в функцию
+                    handleServerAppError(res.data, dispatch)
+                }
+            })
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
             })
     }
 }
+
+//Уточнить на саппорте про изменение таски (чекбокса и тайтла) в одной функции. Через приходящий model
+//В теории принимаем целый model и меняем, надо будет уточнить
 
 

@@ -6,23 +6,21 @@ import PrimarySearchAppBar from "../components/AppBar";
 import {Container, Grid, Paper} from "@mui/material";
 import {
     AddTlAc,
-    ChangeFilterAc, ChangeTodoTitleThunkCreator, CreateTodoThunkCreator,
+    ChangeFilterAc,
+    ChangeTodoTitleThunkCreator,
+    CreateTodoThunkCreator,
     FetchTodosThunkCreator,
     FilterValueType,
-    RemoveTLAc, RemoveTodoThunkCreator,
+    RemoveTLAc,
+    RemoveTodoThunkCreator,
     ReNameAc,
     TodolistDomainType
 } from "../state/todoListReducer";
-import {
-    AddTaskThunkCreator,
-    ChangeTaskCheckboxThunkCreator,
-    changeTaskStatusAC,
-    changeTaskTitleAC, ChangeTaskTitleThunkCreator,
-    removeTaskAC, RemoveTaskThunkCreator
-} from "../state/tasksReducer";
+import {AddTaskThunkCreator, removeTaskAC, RemoveTaskThunkCreator, UpdateTaskTC} from "../state/tasksReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {TaskStatuses} from "../api/todolistApi";
+import {CustomizedSnackbars} from "../components/snackBar/snackbar";
 
 
 function AppWithRedux() {
@@ -32,6 +30,7 @@ function AppWithRedux() {
 
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const tl = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.TL)
+
     const dispatch = useDispatch()
 
 
@@ -51,14 +50,17 @@ function AppWithRedux() {
         // setTasks({...tasks, [tlID]: [{id: v1(), title, isDone: false}, ...tasks[tlID]]})
     }, [])
     const changeStatus = useCallback((tlID: string, taskID: string, status: TaskStatuses) => {
-        dispatch(ChangeTaskCheckboxThunkCreator(tlID, taskID, status))
+        dispatch(UpdateTaskTC(tlID, taskID, {status}))
         // setTasks({...tasks, [tlID]: tasks[tlID].map(m => m.id === taskID ? {...m, isDone: checked} : m)})
-    }, [dispatch, changeTaskStatusAC])
+    }, [dispatch])
     const changeTitle = useCallback((tlId: string, taskID: string, title: string) => {
-        dispatch(ChangeTaskTitleThunkCreator(tlId, taskID, title))
+        console.log({tlId, taskID, title})
+        dispatch(UpdateTaskTC(tlId, taskID, {title}))
         // setTasks({...tasks, [tlId]: tasks[tlId].map(m => m.id === taskID ? {...m, title: title} : m)})
 
-    }, [dispatch, changeTaskTitleAC])
+    }, [dispatch])
+
+
 
 
     const changeFilter = useCallback((tlId: string, value: FilterValueType) => {
@@ -84,7 +86,10 @@ function AppWithRedux() {
 
     return (
         <div className="App">
+
             <PrimarySearchAppBar/>
+            <CustomizedSnackbars/>
+
             <Container maxWidth="xl" fixed>
                 <div style={{marginTop: '60px', marginLeft: '30px'}}><h3>ADD NEW TODO</h3></div>
                 <Grid container style={{padding: '10px', margin: '10px 0px 40px 0px'}}>
@@ -98,14 +103,12 @@ function AppWithRedux() {
                             <Grid item key={tl.id}>
                                 <Paper style={{padding: '20px', backgroundColor: '#bfb2b2'}}>
                                     <Todolist
-                                        tlId={tl.id}
-                                        title={tl.title}
+                                        todolist={tl}
                                         tasks={tasks[tl.id]}
                                         removeTask={removeTask}
                                         changeFilter={changeFilter}
                                         addTask={addTask}
                                         changeStatus={changeStatus}
-                                        filter={tl.filter}
                                         removeTl={removeTl}
                                         changeTitle={changeTitle}
                                         changeTitleTl={changeTitleTl}/>

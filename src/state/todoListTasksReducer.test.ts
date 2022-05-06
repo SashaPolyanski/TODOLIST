@@ -2,7 +2,7 @@ import {TasksStateType} from "../Todolist";
 import {AddTlAc, TodolistDomainType, todoListReducer} from "./todoListReducer";
 import {tasksReducer} from "./tasksReducer";
 
-xit('ids be equal', () => {
+test('ids be equal', () => {
     const startTasksState: TasksStateType = {}
     const startTodolistsState: Array<TodolistDomainType> =[]
     const action = AddTlAc('new todo', 'asdasd');

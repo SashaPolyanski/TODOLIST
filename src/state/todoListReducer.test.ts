@@ -1,5 +1,13 @@
 import {v1} from "uuid";
-import {AddTlAc, ChangeFilterAc, RemoveTLAc, ReNameAc, TodolistDomainType, todoListReducer} from "./todoListReducer";
+import {
+    AddTlAc,
+    ChangeFilterAc,
+    RemoveTLAc,
+    ReNameAc, setEntityStatus,
+    SetTodosAc,
+    TodolistDomainType,
+    todoListReducer
+} from "./todoListReducer";
 
 
 let tlID1: string
@@ -12,8 +20,8 @@ beforeEach(() => {
 
 
     startState = [
-        {id: tlID1, title: 'what to learn', filter: 'ALL', addedDate: '', order: 0},
-        {id: tlID2, title: 'what to buy', filter: 'ALL', addedDate: '', order: 0}
+        {id: tlID1, title: 'what to learn', filter: 'ALL', addedDate: '', order: 0, entityStatus: 'idle'},
+        {id: tlID2, title: 'what to buy', filter: 'ALL', addedDate: '', order: 0, entityStatus: 'idle'}
     ]
 })
 
@@ -51,4 +59,15 @@ test('correct TL should be change filter', () => {
     const endState = todoListReducer(startState, ChangeFilterAc(tlID1, 'ACTIVE'))
     expect(endState.length).toBe(2);
     expect(endState[0].filter).toBe('ACTIVE');
+});
+test('correct TL should be set to the state', () => {
+
+
+    const endState = todoListReducer([], SetTodosAc(startState))
+    expect(endState.length).toBe(2);
+});
+test('correct entityStatus should be change', () => {
+
+    const endState = todoListReducer(startState, setEntityStatus(tlID1, 'loading'))
+    expect(endState[0].entityStatus).toBe('loading');
 });

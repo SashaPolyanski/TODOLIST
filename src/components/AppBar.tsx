@@ -15,6 +15,10 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import LinearProgress from '@mui/material/LinearProgress';
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../state/store";
+import {RequestStatusType} from "../app/appReducer";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -76,7 +80,7 @@ export default function PrimarySearchAppBar() {
         setAnchorEl(null);
         handleMobileMenuClose();
     };
-
+    const status = useSelector<AppRootStateType, RequestStatusType>(state =>state.app.status)
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
@@ -226,6 +230,7 @@ export default function PrimarySearchAppBar() {
                         </IconButton>
                     </Box>
                 </Toolbar>
+                {status === 'loading' && <LinearProgress /> }
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
