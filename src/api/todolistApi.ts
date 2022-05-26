@@ -5,7 +5,7 @@ let instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
     withCredentials: true,
     headers: {
-        'API-KEY': 'fd8c9e33-eec7-499b-a85e-13563189e1d7'
+        'API-KEY': 'b7dc338d-75bb-43db-9901-b14a7eecf51a'
     }
 })
 
@@ -27,7 +27,7 @@ export enum TaskStatuses {
 
 export enum TaskPriorities {
     Low = 0,
-    Moddle = 1,
+    Middle = 1,
     Hi = 2,
     Urgently = 3,
     Later = 4
@@ -39,7 +39,11 @@ export type CommonResponseType<T = {}> = {
     fieldsErrors: string[]
     data: T
 }
-
+type MeResponseType = {
+    id: number
+    email: string
+    login: string
+}
 export type CreateAndRemoveTaskType = {
     addedDate: string
     deadline: null
@@ -60,6 +64,12 @@ export type UpdateTaskModelType = {
     priority?: TaskPriorities
     startDate?: null
     deadline?: null
+}
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe?: boolean
+    captcha?: string
 }
 
 type TasksType = {
@@ -94,7 +104,20 @@ export const tasksApi = {
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<CreateAndRemoveTaskType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
     },
+    //в дженериках мы пишем то, что нам возвращает промис
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
         return instance.put<CommonResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     }
 }
+export const authAPI = {
+    login(data: LoginParamsType) {
+        return instance.post<CommonResponseType<{ userId: number }>>('/auth/login', data)
+    },
+    logout(){
+        return instance.delete('/auth/login')
+    },
+    me() {
+        return instance.get<CommonResponseType<MeResponseType>>('/auth/me')
+    }
+}
+
