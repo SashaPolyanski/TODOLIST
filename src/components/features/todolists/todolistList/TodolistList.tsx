@@ -28,12 +28,12 @@ const TodolistList = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if(isLogin){
+        if (isLogin) {
             dispatch(FetchTodosThunk())
         } else {
             navigate('login')
         }
-    },[isLogin])
+    }, [isLogin])
     //Object.key всегда возвращает массив строк
     // console.log(Object.keys(tasks))
 
@@ -44,21 +44,21 @@ const TodolistList = () => {
         //Создаем action и диспачим его в наш редюсер
         dispatch(RemoveTaskThunk(taskID, tlID))
 
-    }, [dispatch])
+    }, [dispatch, RemoveTaskThunk])
     const addTask = useCallback((tlID: string, title: string) => {
         dispatch(AddTaskThunk(tlID, title))
         // setTasks({...tasks, [tlID]: [{id: v1(), title, isDone: false}, ...tasks[tlID]]})
-    }, [])
+    }, [dispatch, AddTaskThunk])
     const changeStatus = useCallback((tlID: string, taskID: string, status: TaskStatuses) => {
         dispatch(UpdateTaskThunk(tlID, taskID, {status}))
         // setTasks({...tasks, [tlID]: tasks[tlID].map(m => m.id === taskID ? {...m, isDone: checked} : m)})
-    }, [dispatch])
+    }, [dispatch, UpdateTaskThunk])
     const changeTitle = useCallback((tlId: string, taskID: string, title: string) => {
         console.log({tlId, taskID, title})
         dispatch(UpdateTaskThunk(tlId, taskID, {title}))
         // setTasks({...tasks, [tlId]: tasks[tlId].map(m => m.id === taskID ? {...m, title: title} : m)})
 
-    }, [dispatch])
+    }, [dispatch, UpdateTaskThunk])
 
 
     const changeFilter = useCallback((tlId: string, value: FilterValueType) => {
@@ -80,13 +80,12 @@ const TodolistList = () => {
         // проверка на удаление объектов в удаленном массиве
         // console.log(tasks[tlID2])
     }, [dispatch, RemoveTL])
-    if(!isLogin) {
+    if (!isLogin) {
         return <Navigate to={'login'}/>
     }
 
     return (
         <div>
-
 
 
             <Container maxWidth="xl" fixed>
