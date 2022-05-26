@@ -1,10 +1,10 @@
-import {TasksStateType} from "../Todolist";
+import {TasksStateType} from "../../Todolist";
 import {AddTlAcType, RemoveTLAcType, setEntityStatus, SetTodosType} from "./todoListReducer";
 import {Dispatch} from "redux";
-import {tasksApi, TaskStatuses, UpdateTaskModelType} from "../api/todolistApi";
-import {AppRootStateType} from "./store";
-import {setError, setStatus} from "../app/appReducer";
-import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
+import {tasksApi, TaskStatuses, UpdateTaskModelType} from "../../api/todolistApi";
+import {AppRootStateType} from "../store";
+import {setError, setStatus} from "../../components/task/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 
 
 export type TasksType = {
@@ -21,15 +21,15 @@ export type TasksType = {
 }
 
 type ActionsType =
-    ReturnType<typeof removeTaskAC>
-    | ReturnType<typeof addTaskAC>
-    | ReturnType<typeof changeTaskStatusAC>
-    | ReturnType<typeof changeTaskTitleAC>
+    ReturnType<typeof removeTask>
+    | ReturnType<typeof addTask>
+    | ReturnType<typeof changeTaskStatus>
+    | ReturnType<typeof changeTaskTitle>
     | AddTlAcType
     | RemoveTLAcType
     | SetTodosType
-    | ReturnType<typeof GetTasksAc>
-    | ReturnType<typeof UpdateTaskAc>
+    | ReturnType<typeof GetTasks>
+    | ReturnType<typeof UpdateTask>
 
 
 const initialState: TasksStateType = {}
@@ -120,36 +120,36 @@ export const tasksReducer = (state = initialState, action: ActionsType): TasksSt
 
 }
 
-export const removeTaskAC = (id: string, tlID: string) => {
+export const removeTask = (id: string, tlID: string) => {
     return {
         type: 'REMOVE-TASK', id, tlID
 
     } as const
 }
-export const addTaskAC = (task: TasksType) => {
+export const addTask = (task: TasksType) => {
     return {
         type: 'ADD-TASK', task
     } as const
 }
-export const changeTaskStatusAC = (tlID: string, id: string, status: TaskStatuses) => {
+export const changeTaskStatus = (tlID: string, id: string, status: TaskStatuses) => {
     return {
         type: "CHANGE-TASK-STATUS", tlID, id, status
     } as const
 }
-export const changeTaskTitleAC = (tlID: string, id: string, title: string) => {
+export const changeTaskTitle = (tlID: string, id: string, title: string) => {
     return {
         type: 'CHANGE-TASK-TITLE', tlID, id, title
     } as const
 }
 
-export const GetTasksAc = (tlID: string, tasks: TasksType[]) => {
+export const GetTasks = (tlID: string, tasks: TasksType[]) => {
     return {
         type: 'GET-TASKS',
         tlID,
         tasks
     } as const
 }
-export const UpdateTaskAc = (tlID: string, taskID: string, model: UpdateTaskModelType) => {
+export const UpdateTask = (tlID: string, taskID: string, model: UpdateTaskModelType) => {
     return {
         type: 'UPDATE-TASK',
         tlID,
@@ -160,27 +160,27 @@ export const UpdateTaskAc = (tlID: string, taskID: string, model: UpdateTaskMode
 
 
 //thunk
-export const FetchTasksThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
+export const FetchTasksThunk = (tlId: string) => (dispatch: Dispatch) => {
     dispatch(setStatus('loading'))
     tasksApi.getTasks(tlId)
         .then((res) => {
-            dispatch(GetTasksAc(tlId, res.data.items))
+            dispatch(GetTasks(tlId, res.data.items))
             dispatch(setStatus('succeeded'))
         })
 }
-export const RemoveTaskThunkCreator = (id: string, tlID: string) => (dispatch: Dispatch) => {
+export const RemoveTaskThunk = (id: string, tlID: string) => (dispatch: Dispatch) => {
     tasksApi.deleteTask(tlID, id)
         .then((res) => {
-            dispatch(removeTaskAC(id, tlID))
+            dispatch(removeTask(id, tlID))
         })
 }
-export const AddTaskThunkCreator = (tlId: string, title: string) => (dispatch: Dispatch) => {
+export const AddTaskThunk = (tlId: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setStatus('loading'))
     dispatch(setEntityStatus(tlId, 'loading'))
     tasksApi.createTask(tlId, title)
         .then((res) => {
             if (res.data.resultCode === 0) {
-                dispatch(addTaskAC(res.data.data.item))
+                dispatch(addTask(res.data.data.item))
                 dispatch(setStatus('succeeded'))
                 dispatch(setEntityStatus(tlId, 'succeeded'))
             } else {
@@ -194,7 +194,7 @@ export const AddTaskThunkCreator = (tlId: string, title: string) => (dispatch: D
         })
 
 }
-export const UpdateTaskTC = (tlId: string, taskId: string, model: UpdateTaskModelType) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
+export const UpdateTaskThunk = (tlId: string, taskId: string, model: UpdateTaskModelType) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
     dispatch(setEntityStatus(tlId, 'loading'))
     const allTask = getState().tasks
     const TasksForTodo = allTask[tlId]
@@ -214,7 +214,7 @@ export const UpdateTaskTC = (tlId: string, taskId: string, model: UpdateTaskMode
 
             .then((res) => {
                 if (res.data.resultCode === 0) {
-                    dispatch(UpdateTaskAc(tlId, taskId, apiModel))
+                    dispatch(UpdateTask(tlId, taskId, apiModel))
                     dispatch(setEntityStatus(tlId, 'succeeded'))
                 } else {
                     //что бы не дублировать код, нам нужно часть кода засунуть в функцию

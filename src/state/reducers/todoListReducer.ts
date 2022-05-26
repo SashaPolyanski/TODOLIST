@@ -1,7 +1,7 @@
 import {Dispatch} from "redux";
-import {AppRootStateType} from "./store";
-import {todolistApi} from "../api/todolistApi";
-import {RequestStatusType, setStatus} from "../app/appReducer";
+import {AppRootStateType} from "../store";
+import {todolistApi} from "../../api/todolistApi";
+import {RequestStatusType, setStatus} from "../../components/task/appReducer";
 
 
 const initialState: Array<TodolistDomainType> = []
@@ -42,15 +42,15 @@ export const todoListReducer = (state = initialState, action: ActionsType): Arra
 
 //types
 type ActionsType =
-    ReturnType<typeof RemoveTLAc> |
-    ReturnType<typeof AddTlAc> |
-    ReturnType<typeof ReNameAc> |
-    ReturnType<typeof ChangeFilterAc> |
-    ReturnType<typeof SetTodosAc> |
+    ReturnType<typeof RemoveTL> |
+    ReturnType<typeof AddTl> |
+    ReturnType<typeof ReNameTl> |
+    ReturnType<typeof ChangeFilterTl> |
+    ReturnType<typeof SetTodos> |
     ReturnType<typeof setEntityStatus>
-export type RemoveTLAcType = ReturnType<typeof RemoveTLAc>
-export type AddTlAcType = ReturnType<typeof AddTlAc>
-export type SetTodosType = ReturnType<typeof SetTodosAc>
+export type RemoveTLAcType = ReturnType<typeof RemoveTL>
+export type AddTlAcType = ReturnType<typeof AddTl>
+export type SetTodosType = ReturnType<typeof SetTodos>
 export type FilterValueType = 'ALL' | 'COMPLETED' | 'ACTIVE'
 export type TodolistDomainType = TodosType & {
     filter: FilterValueType
@@ -59,7 +59,7 @@ export type TodolistDomainType = TodosType & {
 
 
 //Actions create
-export const RemoveTLAc = (tlID: string) => {
+export const RemoveTL = (tlID: string) => {
     return {
         type: 'REMOVE-TL',
         payload: {
@@ -67,7 +67,7 @@ export const RemoveTLAc = (tlID: string) => {
         }
     } as const
 }
-export const AddTlAc = (title: string, tlId: string) => {
+export const AddTl = (title: string, tlId: string) => {
     return {
         type: 'ADD-TL',
         payload: {
@@ -76,7 +76,7 @@ export const AddTlAc = (title: string, tlId: string) => {
         }
     } as const
 }
-export const ReNameAc = (id: string, title: string) => {
+export const ReNameTl = (id: string, title: string) => {
     return {
         type: 'RENAME-TL',
         payload: {
@@ -85,7 +85,7 @@ export const ReNameAc = (id: string, title: string) => {
         }
     } as const
 }
-export const ChangeFilterAc = (id: string, value: FilterValueType) => {
+export const ChangeFilterTl = (id: string, value: FilterValueType) => {
     return {
         type: 'CHANGE-FILTER',
         payload: {
@@ -102,7 +102,7 @@ export type TodosType = {
     order: number
     title: string
 }
-export const SetTodosAc = (todos: Array<TodosType>) => {
+export const SetTodos = (todos: Array<TodosType>) => {
     return {
         type: 'SET-TODOS',
         todos
@@ -121,42 +121,42 @@ export const setEntityStatus = (id: string, entity: RequestStatusType) => {
 
 //thunk, thunk принимает в себя первым параметром dispatch, вторым параметром принимает в себя getState, третий - экстра аргументы
 //thunk предназначен для side effect, dispatch action
-export const FetchTodosThunkCreator = () => (dispatch: Dispatch, getState: AppRootStateType) => {
+export const FetchTodosThunk = () => (dispatch: Dispatch, getState: AppRootStateType) => {
     dispatch(setStatus('loading'))
     todolistApi.getTodos()
         .then((res) => {
-            dispatch(SetTodosAc(res.data))
+            dispatch(SetTodos(res.data))
             dispatch(setStatus('succeeded'))
         })
 
 }
-export const CreateTodoThunkCreator = (title: string) => (dispatch: Dispatch) => {
+export const CreateTodoThunk = (title: string) => (dispatch: Dispatch) => {
     dispatch(setStatus('loading'))
 
     todolistApi.createTodo(title)
         .then((res) => {
             //Что бы не было конфликта id на сервере и в стейте, мы с стейт должны засетать ту id, которая пришла с сервера
             //Генерировать id с помощью v1() нет смысла, на сервере будет одна, в стейте другая
-            dispatch(AddTlAc(title, res.data.data.item.id))
+            dispatch(AddTl(title, res.data.data.item.id))
             dispatch(setStatus('succeeded'))
         })
 
 }
-export const RemoveTodoThunkCreator = (tlId: string) => (dispatch: Dispatch) => {
+export const RemoveTodoThunk = (tlId: string) => (dispatch: Dispatch) => {
     dispatch(setStatus('loading'))
     dispatch(setEntityStatus(tlId,'loading'))
     todolistApi.deleteTodo(tlId)
         .then(() => {
-            dispatch(RemoveTLAc(tlId))
+            dispatch(RemoveTL(tlId))
             dispatch(setStatus('succeeded'))
             dispatch(setEntityStatus(tlId,'succeeded'))
         })
 }
-export const ChangeTodoTitleThunkCreator = (tlId: string, title: string) => (dispatch: Dispatch) => {
+export const ChangeTodoTitleThunk = (tlId: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setStatus('loading'))
     todolistApi.updateTodoTitle(tlId, title)
         .then((res) => {
-            dispatch(ReNameAc(tlId, title))
+            dispatch(ReNameTl(tlId, title))
             dispatch(setStatus('succeeded'))
         })
 }

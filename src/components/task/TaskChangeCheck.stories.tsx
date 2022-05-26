@@ -3,7 +3,7 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import Task from "./Task";
 import taskStories from "./Task.stories";
-import {TasksType} from "../../state/tasksReducer";
+import {TasksType} from "../../state/reducers/tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../api/todolistApi";
 
 export default {

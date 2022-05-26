@@ -1,9 +1,9 @@
 import {applyMiddleware, combineReducers, createStore} from "redux";
-import {tasksReducer} from "./tasksReducer";
-import {todoListReducer} from "./todoListReducer";
+import {tasksReducer} from "./reducers/tasksReducer";
+import {todoListReducer} from "./reducers/todoListReducer";
 import thunk from "redux-thunk";
-import {appReducer} from "../app/appReducer";
-import {authReducer} from "../components/features/login/LoginReducer";
+import {appReducer} from "../components/task/appReducer";
+import {authReducer} from "./reducers/LoginReducer";
 
 
 const rootReducer = combineReducers({

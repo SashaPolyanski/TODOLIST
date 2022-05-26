@@ -1,4 +1,4 @@
-import {setError, setStatus} from "../app/appReducer";
+import {setError, setStatus} from "../components/task/appReducer";
 import {Dispatch} from "redux";
 import {CommonResponseType} from "../api/todolistApi";
 

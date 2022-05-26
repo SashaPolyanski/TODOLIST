@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
-import {logout} from "../features/login/LoginReducer";
+import {logoutThunk} from "../../state/reducers/LoginReducer";
 import s from './AppBar.module.css'
 
 
@@ -20,7 +20,7 @@ export default function SwipeableTemporaryDrawer() {
     const closeDrawer = () =>setState(false)
     const openDrawer = () =>setState(true)
     const logoutHandler = () =>{
-        dispatch(logout())
+        dispatch(logoutThunk())
     }
 
     const list = () => (

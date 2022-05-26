@@ -6,7 +6,7 @@ import {CustomizedSnackbars} from "../components/snackBar/snackbar";
 import TodolistList from "../components/features/todolists/todolistList/TodolistList";
 import {Login} from "../components/features/login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {initializeAppTC, logout} from "../components/features/login/LoginReducer";
+import {initializeAppThunk} from "../state/reducers/LoginReducer";
 import {AppRootStateType} from "../state/store";
 import {CircularProgress} from "@mui/material";
 
@@ -15,7 +15,7 @@ function AppWithRedux() {
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
     let dispatch = useDispatch()
     useEffect(() => {
-        dispatch(initializeAppTC())
+        dispatch(initializeAppThunk())
 
 
     }, [])

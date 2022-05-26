@@ -3,12 +3,11 @@ import AddItemForm from "./components/addItemForm/AddItemForm";
 import EditableSpan from "./components/EditableSpan/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import Task from "./components/task/Task";
-import {FetchTasksThunkCreator, TasksType} from "./state/tasksReducer";
+import {FetchTasksThunk, TasksType} from "./state/reducers/tasksReducer";
 import {TaskStatuses} from "./api/todolistApi";
-import {FilterValueType, TodolistDomainType} from "./state/todoListReducer";
-import {useDispatch, useSelector} from "react-redux";
+import {FilterValueType, TodolistDomainType} from "./state/reducers/todoListReducer";
+import {useDispatch} from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {AppRootStateType} from "./state/store";
 
 export type TasksStateType = {
     [key: string]: Array<TasksType>
@@ -30,7 +29,7 @@ type PropsType = {
 export const Todolist = React.memo((props: PropsType) => {
     let dispatch = useDispatch()
     useEffect(() => {
-        dispatch(FetchTasksThunkCreator(props.todolist.id))
+        dispatch(FetchTasksThunk(props.todolist.id))
     }, [])
 
     const changeFilterHandler = useCallback((value: FilterValueType) => props.changeFilter(props.todolist.id, value), [props.changeFilter, props.todolist.id])

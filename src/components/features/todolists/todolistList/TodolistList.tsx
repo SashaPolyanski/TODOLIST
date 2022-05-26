@@ -5,20 +5,20 @@ import {TasksStateType, Todolist} from "../../../../Todolist";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../../state/store";
 import {
-    AddTlAc,
-    ChangeFilterAc,
-    ChangeTodoTitleThunkCreator,
-    CreateTodoThunkCreator, FetchTodosThunkCreator,
+    AddTl,
+    ChangeFilterTl,
+    ChangeTodoTitleThunk,
+    CreateTodoThunk,
+    FetchTodosThunk,
     FilterValueType,
-    RemoveTLAc,
-    RemoveTodoThunkCreator,
-    ReNameAc,
+    RemoveTL,
+    RemoveTodoThunk,
+    ReNameTl,
     TodolistDomainType
-} from "../../../../state/todoListReducer";
-import {AddTaskThunkCreator, removeTaskAC, RemoveTaskThunkCreator, UpdateTaskTC} from "../../../../state/tasksReducer";
+} from "../../../../state/reducers/todoListReducer";
+import {AddTaskThunk, RemoveTaskThunk, UpdateTaskThunk} from "../../../../state/reducers/tasksReducer";
 import {TaskStatuses} from "../../../../api/todolistApi";
 import {Navigate, useNavigate} from 'react-router-dom';
-import {logout} from "../../login/LoginReducer";
 
 const TodolistList = () => {
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
@@ -29,7 +29,7 @@ const TodolistList = () => {
 
     useEffect(() => {
         if(isLogin){
-            dispatch(FetchTodosThunkCreator())
+            dispatch(FetchTodosThunk())
         } else {
             navigate('login')
         }
@@ -42,44 +42,44 @@ const TodolistList = () => {
         //Фиксируем изменненное значение, делаем копию наших таскс, находим наш ключь и перезатираем его новым объектом тастс с этим ключем, вызываем фильтр и фильтруем таски
         // setTasks({...tasks, [tlID]: tasks[tlID].filter(f => f.id !== taskID)})
         //Создаем action и диспачим его в наш редюсер
-        dispatch(RemoveTaskThunkCreator(taskID, tlID))
+        dispatch(RemoveTaskThunk(taskID, tlID))
 
-    }, [dispatch, removeTaskAC])
+    }, [dispatch])
     const addTask = useCallback((tlID: string, title: string) => {
-        dispatch(AddTaskThunkCreator(tlID, title))
+        dispatch(AddTaskThunk(tlID, title))
         // setTasks({...tasks, [tlID]: [{id: v1(), title, isDone: false}, ...tasks[tlID]]})
     }, [])
     const changeStatus = useCallback((tlID: string, taskID: string, status: TaskStatuses) => {
-        dispatch(UpdateTaskTC(tlID, taskID, {status}))
+        dispatch(UpdateTaskThunk(tlID, taskID, {status}))
         // setTasks({...tasks, [tlID]: tasks[tlID].map(m => m.id === taskID ? {...m, isDone: checked} : m)})
     }, [dispatch])
     const changeTitle = useCallback((tlId: string, taskID: string, title: string) => {
         console.log({tlId, taskID, title})
-        dispatch(UpdateTaskTC(tlId, taskID, {title}))
+        dispatch(UpdateTaskThunk(tlId, taskID, {title}))
         // setTasks({...tasks, [tlId]: tasks[tlId].map(m => m.id === taskID ? {...m, title: title} : m)})
 
     }, [dispatch])
 
 
     const changeFilter = useCallback((tlId: string, value: FilterValueType) => {
-        dispatch(ChangeFilterAc(tlId, value))
+        dispatch(ChangeFilterTl(tlId, value))
         // setTl(tl.map(m => m.id === tlId ? {...m, filter: value} : m))
-    }, [dispatch, ChangeFilterAc])
+    }, [dispatch, ChangeFilterTl])
     const changeTitleTl = useCallback((tlId: string, title: string) => {
-        dispatch(ChangeTodoTitleThunkCreator(tlId, title))
+        dispatch(ChangeTodoTitleThunk(tlId, title))
         // setTl(tl.map(m => m.id === tlId ? {...m, title: title} : m))
-    }, [dispatch, ReNameAc])
+    }, [dispatch, ReNameTl])
     const addTl = useCallback((title: string) => {
-        dispatch(CreateTodoThunkCreator(title))
-    }, [dispatch, AddTlAc])
+        dispatch(CreateTodoThunk(title))
+    }, [dispatch, AddTl])
     const removeTl = useCallback((tlID: string) => {
-        dispatch(RemoveTodoThunkCreator(tlID))
+        dispatch(RemoveTodoThunk(tlID))
 
         // setTl(tl.filter(f => f.id !== tlID))
         // delete tasks[tlID]
         // проверка на удаление объектов в удаленном массиве
         // console.log(tasks[tlID2])
-    }, [dispatch, RemoveTLAc])
+    }, [dispatch, RemoveTL])
     if(!isLogin) {
         return <Navigate to={'login'}/>
     }

@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import s from './Login.module.css'
-import {loginTC} from "./LoginReducer";
+import {loginThunk} from "../../../state/reducers/LoginReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../state/store";
 import {Navigate} from "react-router-dom";
@@ -45,7 +45,7 @@ export const Login = () => {
         },
 
         onSubmit: values => {
-            dispatch(loginTC(values))
+            dispatch(loginThunk(values))
             formik.resetForm();
         },
     })

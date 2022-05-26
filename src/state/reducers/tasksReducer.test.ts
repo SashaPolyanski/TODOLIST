@@ -1,7 +1,7 @@
-import {TasksStateType} from "../Todolist";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./tasksReducer";
-import {AddTlAc, RemoveTLAc, SetTodosAc} from "./todoListReducer";
-import {TaskPriorities, TaskStatuses} from "../api/todolistApi";
+import {TasksStateType} from "../../Todolist";
+import {addTask, changeTaskStatus, changeTaskTitle, removeTask, tasksReducer} from "./tasksReducer";
+import {AddTl, RemoveTL, SetTodos} from "./todoListReducer";
+import {TaskPriorities, TaskStatuses} from "../../api/todolistApi";
 
 
 let startState: TasksStateType
@@ -78,7 +78,7 @@ beforeEach(() => {
 
 test('delete task', () => {
 
-    const action = removeTaskAC('2', 'tlID2');
+    const action = removeTask('2', 'tlID2');
     let endState = tasksReducer(startState, action)
 
     expect(endState['tlID2'][1].title).toBe('REDUX')
@@ -96,7 +96,7 @@ test('delete task', () => {
 // })
 test('Change task status', () => {
 
-    const action = changeTaskStatusAC('tlID2', '2', TaskStatuses.New);
+    const action = changeTaskStatus('tlID2', '2', TaskStatuses.New);
     let endState = tasksReducer(startState, action)
 
     expect(endState['tlID2'][1].status).toBe(TaskStatuses.New)
@@ -105,7 +105,7 @@ test('Change task status', () => {
 test('Change task title', () => {
 
 
-    const action = changeTaskTitleAC('tlID2', '2', 'TS');
+    const action = changeTaskTitle('tlID2', '2', 'TS');
     let endState = tasksReducer(startState, action)
 
     expect(endState['tlID2'][1].title).toBe('TS')
@@ -114,7 +114,7 @@ test('Change task title', () => {
 test('add tl', () => {
 
 
-    const action = AddTlAc('new tl', 'asasd');
+    const action = AddTl('new tl', 'asasd');
     let endState = tasksReducer(startState, action)
 
     const keys = Object.keys(endState)
@@ -128,7 +128,7 @@ test('add tl', () => {
 test('task deleted??', () => {
 
 
-    const action = RemoveTLAc('tlID1');
+    const action = RemoveTL('tlID1');
     let endState = tasksReducer(startState, action)
 
     const keys = Object.keys(endState)
@@ -139,7 +139,7 @@ test('task deleted??', () => {
 })
 
 test('empty arrays should be added when we set todo', ()=>{
-    const action = SetTodosAc([
+    const action = SetTodos([
         {id: '1' , title: 'tit1', order: 0, addedDate: ''},
         {id: '2' , title: 'tit2', order: 0, addedDate: ''},
     ])

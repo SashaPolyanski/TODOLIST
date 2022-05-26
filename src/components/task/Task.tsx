@@ -4,8 +4,8 @@ import {IconButton, Switch} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditableSpan from "../EditableSpan/EditableSpan";
 import {TaskStatuses} from "../../api/todolistApi";
-import {TasksType} from "../../state/tasksReducer";
-import {RequestStatusType} from "../../app/appReducer";
+import {TasksType} from "../../state/reducers/tasksReducer";
+import {RequestStatusType} from "./appReducer";
 
 
 type PropsType = {

@@ -3,7 +3,7 @@ import s from "../../Todolist.module.css";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";
-import {RequestStatusType} from "../../app/appReducer";
+import {RequestStatusType} from "../task/appReducer";
 
 type PropsType = {
     addItem: ( title: string) => void
