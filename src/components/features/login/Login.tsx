@@ -22,6 +22,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const isLogin = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const theme = useSelector<AppRootStateType, boolean>(state => state.theme.isDark)
     let dispatch = useDispatch()
     const formik = useFormik({
         initialValues: {
@@ -49,7 +50,7 @@ export const Login = () => {
             formik.resetForm();
         },
     })
-    if(isLogin) {
+    if (isLogin) {
         return <Navigate to={'/'}/>
     }
 
@@ -57,6 +58,7 @@ export const Login = () => {
         <Grid item justifyContent={'center'}>
             <FormControl>
                 <FormLabel>
+                    {!theme ? <span className={s.textBody}>
                     <p>To log in get registered
                         <a href={'https://social-network.samuraijs.com/'}
                            target={'_blank'}> here
@@ -65,21 +67,41 @@ export const Login = () => {
                     <p>or use common test account credentials:</p>
                     <p>Email: free@samuraijs.com</p>
                     <p>Password: free</p>
+                    </span> : <span>
+                    <p>To log in get registered
+                        <a href={'https://social-network.samuraijs.com/'}
+                           target={'_blank'}> here
+                        </a>
+                    </p>
+                    <p>or use common test account credentials:</p>
+                    <p>Email: free@samuraijs.com</p>
+                    <p>Password: free</p>
+                    </span>}
+
                 </FormLabel>
 
                 <form onSubmit={formik.handleSubmit}>
                     <FormGroup>
+                        {!theme ? <TextField className={s.inpColor} {...formik.getFieldProps('email')}
+                                             label="Email"
+                                             margin="normal"/> : <TextField {...formik.getFieldProps('email')}
+                                                                            label="Email"
+                                                                            margin="normal"/>}
 
-                        <TextField {...formik.getFieldProps('email')}
-                                   label="Email"
-                                   margin="normal"/>
-                        {formik.touched.email && formik.errors.email && <div className={s.error}>{formik.errors.email}</div>}
-                        <TextField {...formik.getFieldProps('password')}
-                                   type="password"
-                                   label="Password"
-                                   margin="normal"
-                        />
-                        {formik.touched.password && formik.errors.password && <div className={s.error}>{formik.errors.password}</div>}
+                        {formik.touched.email && formik.errors.email &&
+                            <div className={s.error}>{formik.errors.email}</div>}
+                        {!theme ? <TextField className={s.inpColor} {...formik.getFieldProps('password')}
+                                             type="password"
+                                             label="Password"
+                                             margin="normal"
+                        /> : <TextField {...formik.getFieldProps('password')}
+                                        type="password"
+                                        label="Password"
+                                        margin="normal"
+                        />}
+
+                        {formik.touched.password && formik.errors.password &&
+                            <div className={s.error}>{formik.errors.password}</div>}
                         <FormControlLabel label={'Remember me'}
                                           control={<Checkbox  {...formik.getFieldProps('rememberMe')}/>}/>
                         <Button type={'submit'} variant={'contained'} color={'primary'}>

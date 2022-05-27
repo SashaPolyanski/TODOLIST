@@ -5,7 +5,7 @@ export type initType = {
 
 const initState: initType = {
 
-    isDark: false
+    isDark: true
 }
 
 export const switchThemeReducer = (state = initState, action: ActionsType): initType => { // fix any

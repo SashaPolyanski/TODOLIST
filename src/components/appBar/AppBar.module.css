@@ -4,3 +4,9 @@
     font-size: 16px;
     margin: 20px auto;
 }
+.navigateContainer {
+
+    display: flex;
+    justify-content: space-between;
+}
+

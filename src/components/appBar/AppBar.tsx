@@ -53,7 +53,11 @@ export default function SwipeableTemporaryDrawer() {
 
     return (
         <div >
-            <Button variant={'contained'} onClick={openDrawer}>menu</Button>
+            <div className={s.navigateContainer}>
+                <Button variant={'contained'} onClick={openDrawer}>menu</Button>
+                <span className={s.theme}><Theme/></span>
+            </div>
+
             <SwipeableDrawer
                 anchor={'left'}
                 open={state}
@@ -63,7 +67,6 @@ export default function SwipeableTemporaryDrawer() {
             >
                 {/*<Box sx={{ backgroundColor: 'red' }}>*/}
                 {list()}
-                {isLogin && <div className={s.emailAndInfo}><Theme/></div>}
                 {isLogin && <div className={s.emailAndInfo}> {emailInfo}</div>}
                 {isLogin && <Button size={'small'} onClick={logoutHandler}>logout</Button>}
                 {!isLogin && <div className={s.emailAndInfo}>
