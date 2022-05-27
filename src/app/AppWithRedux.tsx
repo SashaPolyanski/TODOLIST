@@ -9,10 +9,12 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import {initializeAppThunk} from "../state/reducers/LoginReducer";
 import {AppRootStateType} from "../state/store";
 import {CircularProgress} from "@mui/material";
+import s from './AppWithRedux.module.css'
 
 
 function AppWithRedux() {
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const theme = useSelector<AppRootStateType, boolean>(state => state.theme.isDark)
     let dispatch = useDispatch()
     useEffect(() => {
         dispatch(initializeAppThunk())
@@ -30,7 +32,7 @@ function AppWithRedux() {
 
     return (
 
-        <div className="App">
+        <div className={theme ? s.body : s.bodyDark}>
 
             <PrimarySearchAppBar/>
             <CustomizedSnackbars/>

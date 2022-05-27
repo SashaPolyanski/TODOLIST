@@ -4,18 +4,20 @@ import s from "../../Todolist.module.css";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";
 import {RequestStatusType} from "../task/appReducer";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../../state/store";
 
 type PropsType = {
-    addItem: ( title: string) => void
+    addItem: (title: string) => void
     entity?: RequestStatusType
 
 }
 
-export const AddItemForm =React.memo ((props: PropsType) => {
+export const AddItemForm = React.memo((props: PropsType) => {
     console.log('add item form')
     let [title, setTitle] = useState<string>('')
     let [error, setError] = useState<string | null>(null)
-
+    const theme = useSelector<AppRootStateType, boolean>(state => state.theme.isDark)
     const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
         setError(null)
@@ -40,11 +42,21 @@ export const AddItemForm =React.memo ((props: PropsType) => {
     return (
         <div>
             <IconButton aria-label="delete" size="small">
-                <DeleteIcon fontSize="inherit" />
+                {!theme ? <DeleteIcon color={'secondary'} fontSize="inherit"/> : <DeleteIcon fontSize="inherit"/>}
             </IconButton>
-            <TextField color={error ? 'error' : 'primary'} id="standard-basic" variant="standard" size={'small'} value={title} onKeyPress={onKeyPressHandler}
-                       onChange={onChangeTitleHandler}/>
-            <Button disabled={props.entity === 'loading'} variant={'contained'}  style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={addTaskHandler}>+</Button>
+            {!theme ? <TextField focused color={error ? 'error' : 'secondary'} id="standard-basic" variant="standard"
+                                 size={'small'} value={title} onKeyPress={onKeyPressHandler}
+                                 onChange={onChangeTitleHandler}/> :
+                <TextField color={error ? 'error' : 'secondary'} id="standard-basic" variant="standard" size={'small'}
+                           value={title} onKeyPress={onKeyPressHandler}
+                           onChange={onChangeTitleHandler}/>}
+            {!theme ? <Button color={'secondary'} disabled={props.entity === 'loading'} variant={'contained'}
+                              style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}
+                              onClick={addTaskHandler}>+</Button> :
+                <Button disabled={props.entity === 'loading'} variant={'contained'}
+                        style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}
+                        onClick={addTaskHandler}>+</Button>}
+
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>
     );

@@ -18,7 +18,6 @@ type PropsType = {
 
 const Task = React.memo((props: PropsType) => {
 
-    console.log('task')
 
     const changeStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         props.changeStatusHandler(props.task.id, e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New)

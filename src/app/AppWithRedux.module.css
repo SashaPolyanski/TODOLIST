@@ -1,0 +1,11 @@
+.body {
+    width: 100%;
+    background-image: url("https://images.wallpaperscraft.ru/image/single/sneg_belyy_fon_poverhnost_79574_1920x1080.jpg");
+    background-position: center;
+
+}
+.bodyDark {
+    background-image: url("https://img3.goodfon.ru/original/1920x1080/1/bc/chernyy-fon-carapiny-abstrakciya.jpg") ;
+    background-position: center;
+    color: antiquewhite;
+}

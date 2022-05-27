@@ -24,6 +24,7 @@ const TodolistList = () => {
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const tl = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.TL)
     const isLogin = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const theme = useSelector<AppRootStateType, boolean>(state =>state.theme.isDark )
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -100,7 +101,8 @@ const TodolistList = () => {
 
                         return (
                             <Grid item key={tl.id}>
-                                <Paper style={{padding: '20px', backgroundColor: '#bfb2b2'}}>
+                                {!theme ?
+                                    <Paper style={{padding: '20px', backgroundColor: '#594b4e' , color: 'antiquewhite'}}>
                                     <Todolist
                                         todolist={tl}
                                         tasks={tasks[tl.id]}
@@ -112,6 +114,20 @@ const TodolistList = () => {
                                         changeTitle={changeTitle}
                                         changeTitleTl={changeTitleTl}/>
                                 </Paper>
+                                    :
+                                    <Paper style={{padding: '20px', backgroundColor: '#dce0e6' }}>
+                                        <Todolist
+                                            todolist={tl}
+                                            tasks={tasks[tl.id]}
+                                            removeTask={removeTask}
+                                            changeFilter={changeFilter}
+                                            addTask={addTask}
+                                            changeStatus={changeStatus}
+                                            removeTl={removeTl}
+                                            changeTitle={changeTitle}
+                                            changeTitleTl={changeTitleTl}/>
+                                    </Paper>}
+
                             </Grid>
                         )
                     })}

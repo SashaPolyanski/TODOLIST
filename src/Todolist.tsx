@@ -6,8 +6,10 @@ import Task from "./components/task/Task";
 import {FetchTasksThunk, TasksType} from "./state/reducers/tasksReducer";
 import {TaskStatuses} from "./api/todolistApi";
 import {FilterValueType, TodolistDomainType} from "./state/reducers/todoListReducer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {AppRootStateType} from "./state/store";
+import s from './Todolist.module.css'
 
 export type TasksStateType = {
     [key: string]: Array<TasksType>
@@ -27,6 +29,7 @@ type PropsType = {
 
 
 export const Todolist = React.memo((props: PropsType) => {
+    const theme = useSelector<AppRootStateType, boolean>(state => state.theme.isDark)
     let dispatch = useDispatch()
     useEffect(() => {
         dispatch(FetchTasksThunk(props.todolist.id))
@@ -72,7 +75,8 @@ export const Todolist = React.memo((props: PropsType) => {
         <IconButton aria-label="delete" size="small"  disabled={props.todolist.entityStatus === 'loading'} >
 
             <DeleteIcon onClick={removeTodoHandler} fontSize="inherit"/>
-            <span  onClick={removeTodoHandler}>RemoveTODO</span>
+            {!theme ? <span className={s.removeColor} onClick={removeTodoHandler}>RemoveTODO</span> : <span  onClick={removeTodoHandler}>RemoveTODO</span>}
+
 
         </IconButton>
         <h3><EditableSpan oldTitle={props.todolist.title} changeTitleHandler={changeTitleTlHandler}/></h3>

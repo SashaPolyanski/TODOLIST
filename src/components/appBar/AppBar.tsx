@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {logoutThunk} from "../../state/reducers/LoginReducer";
 import s from './AppBar.module.css'
+import Theme from "../features/theme/Theme";
 
 
 export default function SwipeableTemporaryDrawer() {
@@ -62,11 +63,13 @@ export default function SwipeableTemporaryDrawer() {
             >
                 {/*<Box sx={{ backgroundColor: 'red' }}>*/}
                 {list()}
+                {isLogin && <div className={s.emailAndInfo}><Theme/></div>}
                 {isLogin && <div className={s.emailAndInfo}> {emailInfo}</div>}
                 {isLogin && <Button size={'small'} onClick={logoutHandler}>logout</Button>}
                 {!isLogin && <div className={s.emailAndInfo}>
                     <div>Please login to continue</div>
                         </div>}
+
                 {/*</Box>*/}
 
 
