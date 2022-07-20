@@ -1,11 +1,11 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import s from "../../Todolist.module.css";
+import s from "../../../Todolist.module.css";
 import {IconButton, Switch} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditableSpan from "../EditableSpan/EditableSpan";
-import {TaskStatuses} from "../../api/todolistApi";
-import {TasksType} from "../../state/reducers/tasksReducer";
-import {RequestStatusType} from "./appReducer";
+import {TaskStatuses} from "../../../a1-main/b3-dal/todolistApi";
+import {TasksType} from "../../../state/reducers/tasksReducer";
+import {RequestStatusType} from "../../../state/reducers/appReducer";
 
 
 type PropsType = {

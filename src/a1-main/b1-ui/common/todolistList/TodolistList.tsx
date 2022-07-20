@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import {Container, Grid, Paper} from "@mui/material";
-import AddItemForm from "../../../addItemForm/AddItemForm";
+import AddItemForm from "../../../../components/addItemForm/AddItemForm";
 import {TasksStateType, Todolist} from "../../../../Todolist";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../../state/store";
@@ -17,7 +17,7 @@ import {
     TodolistDomainType
 } from "../../../../state/reducers/todoListReducer";
 import {AddTaskThunk, RemoveTaskThunk, UpdateTaskThunk} from "../../../../state/reducers/tasksReducer";
-import {TaskStatuses} from "../../../../api/todolistApi";
+import {TaskStatuses} from "../../../b3-dal/todolistApi";
 import {Navigate, useNavigate} from 'react-router-dom';
 
 const TodolistList = () => {

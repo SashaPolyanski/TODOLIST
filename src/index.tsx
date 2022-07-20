@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import AppWithRedux from "./app/AppWithRedux";
+import AppWithRedux from "./a1-main/b1-ui/AppWithRedux";
 import {Provider} from "react-redux";
 import {store} from "./state/store";
 import {BrowserRouter} from "react-router-dom";

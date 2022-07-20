@@ -3,8 +3,8 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import Task from "./Task";
 import taskStories from "./Task.stories";
-import {TasksType} from "../../state/reducers/tasksReducer";
-import {TaskPriorities, TaskStatuses} from "../../api/todolistApi";
+import {TasksType} from "../../../state/reducers/tasksReducer";
+import {TaskPriorities, TaskStatuses} from "../../../a1-main/b3-dal/todolistApi";
 
 export default {
     title: 'TODOLIST/TaskChangeBox',

@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect} from 'react';
 import AddItemForm from "./components/addItemForm/AddItemForm";
-import EditableSpan from "./components/EditableSpan/EditableSpan";
+import EditableSpan from "./components/features/EditableSpan/EditableSpan";
 import {Button, IconButton} from "@mui/material";
-import Task from "./components/task/Task";
+import Task from "./components/features/task/Task";
 import {FetchTasksThunk, TasksType} from "./state/reducers/tasksReducer";
-import {TaskStatuses} from "./api/todolistApi";
+import {TaskStatuses} from "./a1-main/b3-dal/todolistApi";
 import {FilterValueType, TodolistDomainType} from "./state/reducers/todoListReducer";
 import {useDispatch, useSelector} from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";

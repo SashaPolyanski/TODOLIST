@@ -1,9 +1,9 @@
 import {TasksStateType} from "../../Todolist";
 import {AddTlAcType, RemoveTLAcType, setEntityStatus, SetTodosType} from "./todoListReducer";
 import {Dispatch} from "redux";
-import {tasksApi, TaskStatuses, UpdateTaskModelType} from "../../api/todolistApi";
+import {tasksApi, TaskStatuses, UpdateTaskModelType} from "../../a1-main/b3-dal/todolistApi";
 import {AppRootStateType} from "../store";
-import {setError, setStatus} from "../../components/task/appReducer";
+import {setStatus} from "./appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 
 
@@ -161,11 +161,11 @@ export const UpdateTask = (tlID: string, taskID: string, model: UpdateTaskModelT
 
 //thunk
 export const FetchTasksThunk = (tlId: string) => (dispatch: Dispatch) => {
-    dispatch(setStatus('loading'))
+    dispatch(setStatus({status:'loading'}))
     tasksApi.getTasks(tlId)
         .then((res) => {
             dispatch(GetTasks(tlId, res.data.items))
-            dispatch(setStatus('succeeded'))
+            dispatch(setStatus({status:'succeeded'}))
         })
 }
 export const RemoveTaskThunk = (id: string, tlID: string) => (dispatch: Dispatch) => {
@@ -175,13 +175,13 @@ export const RemoveTaskThunk = (id: string, tlID: string) => (dispatch: Dispatch
         })
 }
 export const AddTaskThunk = (tlId: string, title: string) => (dispatch: Dispatch) => {
-    dispatch(setStatus('loading'))
+    dispatch(setStatus({status:'loading'}))
     dispatch(setEntityStatus(tlId, 'loading'))
     tasksApi.createTask(tlId, title)
         .then((res) => {
             if (res.data.resultCode === 0) {
                 dispatch(addTask(res.data.data.item))
-                dispatch(setStatus('succeeded'))
+                dispatch(setStatus({status:'succeeded'}))
                 dispatch(setEntityStatus(tlId, 'succeeded'))
             } else {
                 handleServerAppError(res.data, dispatch)

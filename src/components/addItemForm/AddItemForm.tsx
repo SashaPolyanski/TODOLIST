@@ -3,7 +3,7 @@ import s from "../../Todolist.module.css";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";
-import {RequestStatusType} from "../task/appReducer";
+import {RequestStatusType} from "../../state/reducers/appReducer";
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 

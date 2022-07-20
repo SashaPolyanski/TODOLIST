@@ -1,3 +1,7 @@
 .removeColor {
     color: antiquewhite;
 }
+
+ul>li {
+    list-style-type: none;
+}

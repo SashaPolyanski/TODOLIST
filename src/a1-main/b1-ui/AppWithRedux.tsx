@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
-import '../App.css';
-import PrimarySearchAppBar from "../components/appBar/AppBar";
+import '../../App.css';
+import PrimarySearchAppBar from "./common/appBar/AppBar";
 import {useDispatch, useSelector} from "react-redux";
-import {CustomizedSnackbars} from "../components/snackBar/snackbar";
-import TodolistList from "../components/features/todolists/todolistList/TodolistList";
-import {Login} from "../components/features/login/Login";
+import {CustomizedSnackbars} from "../../components/features/snackBar/snackbar";
+import TodolistList from "./common/todolistList/TodolistList";
+import {Login} from "../../components/features/login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {initializeAppThunk} from "../state/reducers/LoginReducer";
-import {AppRootStateType} from "../state/store";
+import {initializeAppThunk} from "../../state/reducers/LoginReducer";
+import {AppRootStateType} from "../../state/store";
 import {CircularProgress} from "@mui/material";
 import s from './AppWithRedux.module.css'
 
