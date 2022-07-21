@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect} from 'react';
-import AddItemForm from "./components/addItemForm/AddItemForm";
-import EditableSpan from "./components/features/EditableSpan/EditableSpan";
+import AddItemForm from "../../components/addItemForm/AddItemForm";
+import EditableSpan from "../../components/features/EditableSpan/EditableSpan";
 import {Button, IconButton} from "@mui/material";
-import Task from "./components/features/task/Task";
-import {FetchTasksThunk, TasksType} from "./state/reducers/tasksReducer";
-import {TaskStatuses} from "./a1-main/b3-dal/todolistApi";
-import {FilterValueType, TodolistDomainType} from "./state/reducers/todoListReducer";
+import Task from "../../components/features/task/Task";
+import {FetchTasksThunk, TasksType} from "../../../b2-bll/reducers/tasksReducer";
+import {TaskStatuses} from "../../../b3-dal/todolistApi";
+import {FilterValueType, TodolistDomainType} from "../../../b2-bll/reducers/todoListReducer";
 import {useDispatch, useSelector} from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {AppRootStateType} from "./state/store";
+import {AppRootStateType} from "../../../b2-bll/store";
 import s from './Todolist.module.css'
 
 export type TasksStateType = {

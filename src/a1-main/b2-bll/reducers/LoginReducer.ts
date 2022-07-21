@@ -1,7 +1,7 @@
 import {Dispatch} from 'redux'
 import {isInitializedAc, setStatus} from './appReducer'
-import {authAPI, LoginParamsType} from "../../a1-main/b3-dal/todolistApi";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
+import {authAPI, LoginParamsType} from "../../b3-dal/todolistApi";
+import {handleServerAppError, handleServerNetworkError} from "../../b1-ui/utils/errorUtils";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 const initialState = {

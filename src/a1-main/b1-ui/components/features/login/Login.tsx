@@ -9,9 +9,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import s from './Login.module.css'
-import {loginThunk} from "../../../state/reducers/LoginReducer";
+import {loginThunk} from "../../../../b2-bll/reducers/LoginReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../../state/store";
+import {AppRootStateType} from "../../../../b2-bll/store";
 import {Navigate} from "react-router-dom";
 
 type FormikErrorType = {

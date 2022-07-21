@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { AppRootStateType } from "../store";
-import { todolistApi } from "../../a1-main/b3-dal/todolistApi";
+import { todolistApi } from "../../b3-dal/todolistApi";
 import { RequestStatusType, setStatus } from "./appReducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 

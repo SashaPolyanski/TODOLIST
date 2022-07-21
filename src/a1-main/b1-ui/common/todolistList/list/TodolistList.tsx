@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect} from 'react';
 import {Container, Grid, Paper} from "@mui/material";
-import AddItemForm from "../../../../components/addItemForm/AddItemForm";
-import {TasksStateType, Todolist} from "../../../../Todolist";
+import AddItemForm from "../../../components/addItemForm/AddItemForm";
+import {TasksStateType, Todolist} from "../Todolist";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../../../state/store";
+import {AppRootStateType} from "../../../../b2-bll/store";
 import {
     AddTl,
     ChangeFilterTl,
@@ -15,9 +15,9 @@ import {
     RemoveTodoThunk,
     ReNameTl,
     TodolistDomainType
-} from "../../../../state/reducers/todoListReducer";
-import {AddTaskThunk, RemoveTaskThunk, UpdateTaskThunk} from "../../../../state/reducers/tasksReducer";
-import {TaskStatuses} from "../../../b3-dal/todolistApi";
+} from "../../../../b2-bll/reducers/todoListReducer";
+import {AddTaskThunk, RemoveTaskThunk, UpdateTaskThunk} from "../../../../b2-bll/reducers/tasksReducer";
+import {TaskStatuses} from "../../../../b3-dal/todolistApi";
 import {Navigate, useNavigate} from 'react-router-dom';
 
 const TodolistList = () => {

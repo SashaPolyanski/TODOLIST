@@ -1,11 +1,11 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import s from "../../Todolist.module.css";
+import s from "../../common/todolistList/Todolist.module.css";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Button, IconButton, TextField} from "@mui/material";
-import {RequestStatusType} from "../../state/reducers/appReducer";
+import {RequestStatusType} from "../../../b2-bll/reducers/appReducer";
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "../../state/store";
+import {AppRootStateType} from "../../../b2-bll/store";
 
 type PropsType = {
     addItem: (title: string) => void

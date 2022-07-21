@@ -1,10 +1,10 @@
-import { TasksStateType } from "../../Todolist";
+import { TasksStateType } from "../../b1-ui/common/todolistList/Todolist";
 import { AddTl, RemoveTL, setEntityStatus, SetTodos } from "./todoListReducer";
 import { Dispatch } from "redux";
-import { tasksApi, TaskStatuses, UpdateTaskModelType } from "../../a1-main/b3-dal/todolistApi";
+import { tasksApi, TaskStatuses, UpdateTaskModelType } from "../../b3-dal/todolistApi";
 import { AppRootStateType } from "../store";
 import { setStatus } from "./appReducer";
-import { handleServerAppError, handleServerNetworkError } from "../../utils/errorUtils";
+import { handleServerAppError, handleServerNetworkError } from "../../b1-ui/utils/errorUtils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 

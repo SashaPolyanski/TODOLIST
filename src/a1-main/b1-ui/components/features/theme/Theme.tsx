@@ -3,8 +3,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {MaterialUISwitch} from './ThemeStyled';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../../state/store";
-import {switchTheme} from "../../../state/reducers/themeReducer";
+import {AppRootStateType} from "../../../../b2-bll/store";
+import {switchTheme} from "../../../../b2-bll/reducers/themeReducer";
 
 
 export default function Theme() {

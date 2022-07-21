@@ -1,4 +1,4 @@
-import {appReducer, InitialStateType, setError, setStatus} from "../../../state/reducers/appReducer";
+import {appReducer, InitialStateType, setError, setStatus} from "../../../../b2-bll/reducers/appReducer";
 
 let startState: InitialStateType
 

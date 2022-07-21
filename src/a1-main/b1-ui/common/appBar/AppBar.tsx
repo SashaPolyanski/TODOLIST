@@ -4,10 +4,10 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../../../state/store";
-import {logoutThunk} from "../../../../state/reducers/LoginReducer";
+import {AppRootStateType} from "../../../b2-bll/store";
+import {logoutThunk} from "../../../b2-bll/reducers/LoginReducer";
 import s from './AppBar.module.css'
-import Theme from "../../../../components/features/theme/Theme";
+import Theme from "../../components/features/theme/Theme";
 
 
 export default function SwipeableTemporaryDrawer() {

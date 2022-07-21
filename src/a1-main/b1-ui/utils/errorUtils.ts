@@ -1,6 +1,6 @@
-import {setError, setStatus} from "../state/reducers/appReducer";
+import {setError, setStatus} from "../../b2-bll/reducers/appReducer";
 import {Dispatch} from "redux";
-import {CommonResponseType} from "../a1-main/b3-dal/todolistApi";
+import {CommonResponseType} from "../../b3-dal/todolistApi";
 
 export const handleServerAppError = <T>(data: CommonResponseType<T>, dispatch: Dispatch) => {
     if (data.messages.length) {
