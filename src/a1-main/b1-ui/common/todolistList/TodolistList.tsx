@@ -63,7 +63,7 @@ const TodolistList = () => {
 
 
     const changeFilter = useCallback((tlId: string, value: FilterValueType) => {
-        dispatch(ChangeFilterTl(tlId, value))
+        dispatch(ChangeFilterTl({id: tlId, value }))
         // setTl(tl.map(m => m.id === tlId ? {...m, filter: value} : m))
     }, [dispatch, ChangeFilterTl])
     const changeTitleTl = useCallback((tlId: string, title: string) => {

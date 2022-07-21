@@ -12,16 +12,35 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     RemoveTL(state, action: PayloadAction<{ tlID: string }>) {
+      const index = state.findIndex(f=>f.id !== action.payload.tlID)
+      if(index > -1) {
+        state.slice(index, 1)
+      }
     },
     AddTl(state, action: PayloadAction<{ title: string, tlId: string }>) {
+      state.unshift({
+        id: action.payload.tlId,
+        title: action.payload.title,
+        filter: 'ALL',
+        addedDate: '',
+        order: 0,
+        entityStatus: 'idle'
+      })
     },
     ReNameTl(state, action: PayloadAction<{ id: string, title: string }>) {
+      const index = state.findIndex(f=>f.id !== action.payload.id)
+      state[index].title = action.payload.title
     },
     ChangeFilterTl(state, action: PayloadAction<{ id: string, value: FilterValueType }>) {
+      const index = state.findIndex(f=>f.id !== action.payload.id)
+      state[index].filter = action.payload.value
     },
     SetTodos(state, action: PayloadAction<{ todos: Array<TodosType> }>) {
+      return action.payload.todos.map(t => ({ ...t, filter: 'ALL', entityStatus: 'idle' }))
     },
     setEntityStatus(state, action: PayloadAction<{ id: string, entity: RequestStatusType }>) {
+      const index = state.findIndex(f=>f.id !== action.payload.id)
+      state[index].entityStatus = action.payload.entity
     },
   }
 
@@ -29,47 +48,9 @@ const slice = createSlice({
 export const todolistReducer = slice.reducer
 export const { RemoveTL, SetTodos, AddTl, ChangeFilterTl, ReNameTl, setEntityStatus } = slice.actions
 
-export const todoListReducer = (state = initialState, action: ActionsType): Array<TodolistDomainType> => {
-  switch (action.type) {
-    case "SET-TODOS":
-      return action.todos.map(t => ({ ...t, filter: 'ALL', entityStatus: 'idle' }))
 
-    case 'REMOVE-TL' :
-      return state.filter(f => f.id !== action.payload.tlID)
-    case "APP/SET-ENTITY-STATUS":
-      return state.map(f => f.id === action.id ? { ...f, entityStatus: action.entity } : f)
-
-    case 'ADD-TL' :
-      return [{
-        id: action.payload.tlId,
-        title: action.payload.title,
-        filter: 'ALL',
-        addedDate: '',
-        order: 0,
-        entityStatus: 'idle'
-      }, ...state]
-
-    case "RENAME-TL":
-      return state.map(m => m.id === action.payload.id ? { ...m, title: action.payload.title } : m)
-
-    case "CHANGE-FILTER":
-      return state.map(m => m.id === action.payload.id ? { ...m, filter: action.payload.value } : m)
-
-
-    default:
-      return state
-
-  }
-}
 
 //types
-type ActionsType =
-  ReturnType<typeof RemoveTL> |
-  ReturnType<typeof AddTl> |
-  ReturnType<typeof ReNameTl> |
-  ReturnType<typeof ChangeFilterTl> |
-  ReturnType<typeof SetTodos> |
-  ReturnType<typeof setEntityStatus>
 export type RemoveTLAcType = ReturnType<typeof RemoveTL>
 export type AddTlAcType = ReturnType<typeof AddTl>
 export type SetTodosType = ReturnType<typeof SetTodos>
@@ -171,14 +152,14 @@ export const RemoveTodoThunk = (tlId: string) => (dispatch: Dispatch) => {
     .then(() => {
       dispatch(RemoveTL({ tlID: tlId }))
       dispatch(setStatus({ status: 'succeeded' }))
-      dispatch(setEntityStatus({id: tlId,entity: 'succeeded' }))
+      dispatch(setEntityStatus({ id: tlId, entity: 'succeeded' }))
     })
 }
 export const ChangeTodoTitleThunk = (tlId: string, title: string) => (dispatch: Dispatch) => {
   dispatch(setStatus({ status: 'loading' }))
   todolistApi.updateTodoTitle(tlId, title)
     .then((res) => {
-      dispatch(ReNameTl({id: tlId, title }))
+      dispatch(ReNameTl({ id: tlId, title }))
       dispatch(setStatus({ status: 'succeeded' }))
     })
 }
