@@ -1,12 +1,11 @@
 import { TasksStateType } from "../../Todolist";
-import { AddTl, FilterValueType, RemoveTL, setEntityStatus, SetTodos, TodosType } from "./todoListReducer";
+import { AddTl, RemoveTL, setEntityStatus, SetTodos } from "./todoListReducer";
 import { Dispatch } from "redux";
 import { tasksApi, TaskStatuses, UpdateTaskModelType } from "../../a1-main/b3-dal/todolistApi";
 import { AppRootStateType } from "../store";
-import { RequestStatusType, setStatus } from "./appReducer";
+import { setStatus } from "./appReducer";
 import { handleServerAppError, handleServerNetworkError } from "../../utils/errorUtils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { action } from "@storybook/addon-actions";
 
 
 export type TasksType = {
@@ -21,19 +20,19 @@ export type TasksType = {
   title: string
   todoListId: string
 }
-
-type ActionsType =
-  ReturnType<typeof removeTask>
-  | ReturnType<typeof addTask>
-  | ReturnType<typeof changeTaskStatus>
-  | ReturnType<typeof changeTaskTitle>
-  | ReturnType<typeof GetTasks>
-  | ReturnType<typeof UpdateTask>
+//
+// type ActionsType =
+//   ReturnType<typeof removeTask>
+//   | ReturnType<typeof addTask>
+//   | ReturnType<typeof changeTaskStatus>
+//   | ReturnType<typeof changeTaskTitle>
+//   | ReturnType<typeof GetTasks>
+//   | ReturnType<typeof UpdateTask>
 
 
 const initialState: TasksStateType = {}
 const slice = createSlice({
-  name: 'todolist',
+  name: 'tasksReducer',
   initialState: initialState,
   reducers: {
     removeTask(state, action: PayloadAction<{ id: string, tlID: string }>) {
@@ -44,8 +43,7 @@ const slice = createSlice({
       }
     },
     addTask(state, action: PayloadAction<{ task: TasksType }>) {
-      // @ts-ignore
-      state(action.payload.task.todoListId).unshift(action.payload.task)
+      state[action.payload.task.todoListId].unshift(action.payload.task)
     },
     changeTaskStatus(state, action: PayloadAction<{ tlID: string, id: string, status: TaskStatuses }>) {
     },
@@ -56,7 +54,7 @@ const slice = createSlice({
     },
     UpdateTask(state, action: PayloadAction<{ tlID: string, taskID: string, model: UpdateTaskModelType }>) {
       const tasks = state[action.payload.tlID];
-      const index = tasks.findIndex(t => t.id === action.payload.tlID)
+      const index = tasks.findIndex(t => t.id === action.payload.taskID)
       if (index > -1) {
         tasks[index] = { ...tasks[index], ...action.payload.model }
       }
@@ -82,19 +80,19 @@ const slice = createSlice({
   // }
 
 })
-export const todolistReducer = slice.reducer
+export const tasksReducer = slice.reducer
 export const { addTask, GetTasks, removeTask, UpdateTask } = slice.actions
 
-export const tasksReducer = (state = initialState, action: any): TasksStateType => {
-  switch (action.type) {
-
-    case SetTodos.type: {
-      //Делаем для того, что бы убрать undefined при получениее тасок, что бы проект нормально отрисавался
-      let stateCopy = { ...state }
-      action.payload.todos.forEach((m: any) => stateCopy[m.id] = []
-      )
-      return stateCopy
-    }
+// export const tasksReducer = (state = initialState, action: any): TasksStateType => {
+//   switch (action.type) {
+//
+//     case SetTodos.type: {
+//       //Делаем для того, что бы убрать undefined при получениее тасок, что бы проект нормально отрисавался
+//       let stateCopy = { ...state }
+//       action.payload.todos.forEach((m: any) => stateCopy[m.id] = []
+//       )
+//       return stateCopy
+//     }
     // case 'REMOVE-TASK' : {
     //   return {
     //     //Возвращаем объект
@@ -145,24 +143,24 @@ export const tasksReducer = (state = initialState, action: any): TasksStateType 
     //     [action.tlID]: state[action.tlID].map(m => m.id === action.id ? { ...m, title: action.title } : m)
     //   }
     // }
-    case AddTl.type: {
-      return {
-        ...state,
-        [action.payload.tlId]: []
-      }
-    }
-    case RemoveTL.type: {
-      let copy = { ...state }
-      delete copy[action.payload.tlID]
-      return copy
-
-    }
-
-    default:
-      return state
-  }
-
-}
+//     case AddTl.type: {
+//       return {
+//         ...state,
+//         [action.payload.tlId]: []
+//       }
+//     }
+//     case RemoveTL.type: {
+//       let copy = { ...state }
+//       delete copy[action.payload.tlID]
+//       return copy
+//
+//     }
+//
+//     default:
+//       return state
+//   }
+//
+// }
 
 // export const removeTask = (id: string, tlID: string) => {
 //   return {
@@ -175,16 +173,16 @@ export const tasksReducer = (state = initialState, action: any): TasksStateType 
 //     type: 'ADD-TASK', task
 //   } as const
 // }
-export const changeTaskStatus = (tlID: string, id: string, status: TaskStatuses) => {
-  return {
-    type: "CHANGE-TASK-STATUS", tlID, id, status
-  } as const
-}
-export const changeTaskTitle = (tlID: string, id: string, title: string) => {
-  return {
-    type: 'CHANGE-TASK-TITLE', tlID, id, title
-  } as const
-}
+// export const changeTaskStatus = (tlID: string, id: string, status: TaskStatuses) => {
+//   return {
+//     type: "CHANGE-TASK-STATUS", tlID, id, status
+//   } as const
+// }
+// export const changeTaskTitle = (tlID: string, id: string, title: string) => {
+//   return {
+//     type: 'CHANGE-TASK-TITLE', tlID, id, title
+//   } as const
+// }
 
 // export const GetTasks = (tlID: string, tasks: TasksType[]) => {
 //   return {
@@ -226,7 +224,7 @@ export const AddTaskThunk = (tlId: string, title: string) => (dispatch: Dispatch
       if (res.data.resultCode === 0) {
         dispatch(addTask({task: res.data.data.item }))
         dispatch(setStatus({ status: 'succeeded' }))
-        dispatch(setEntityStatus({ id: tlId, entity: 'loading' }))
+        dispatch(setEntityStatus({ id: tlId, entity: 'succeeded' }))
       } else {
         handleServerAppError(res.data, dispatch)
       }

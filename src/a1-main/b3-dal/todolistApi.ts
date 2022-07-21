@@ -22,7 +22,6 @@ export enum TaskStatuses {
   InProgress = 1,
   Completed = 2,
   Draft = 3,
-
 }
 
 export enum TaskPriorities {

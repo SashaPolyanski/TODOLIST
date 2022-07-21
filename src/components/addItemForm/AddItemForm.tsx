@@ -14,7 +14,6 @@ type PropsType = {
 }
 
 export const AddItemForm = React.memo((props: PropsType) => {
-    console.log('add item form')
     let [title, setTitle] = useState<string>('')
     let [error, setError] = useState<string | null>(null)
     const theme = useSelector<AppRootStateType, boolean>(state => state.theme.isDark)
@@ -23,6 +22,7 @@ export const AddItemForm = React.memo((props: PropsType) => {
         setError(null)
 
     }
+    console.log(props.entity)
     const addTaskHandler = () => {
         if (title.trim() !== '') {
             props.addItem(title.trim())

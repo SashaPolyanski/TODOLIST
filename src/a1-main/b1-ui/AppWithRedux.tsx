@@ -37,7 +37,7 @@ function AppWithRedux() {
             <PrimarySearchAppBar/>
             <CustomizedSnackbars/>
             <Routes>
-                <Route path={''} element={<TodolistList/>}/>
+                <Route path={'/'} element={<TodolistList/>}/>
                 <Route path={'login'} element={<Login/>}/>
                 <Route path={'404'} element={<div><h1>404 page not found</h1></div>}/>
                 <Route path={'*'} element={<Navigate to={''}/>}/>

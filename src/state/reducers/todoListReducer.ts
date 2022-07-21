@@ -12,9 +12,9 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     RemoveTL(state, action: PayloadAction<{ tlID: string }>) {
-      const index = state.findIndex(f=>f.id !== action.payload.tlID)
+      const index = state.findIndex(f=>f.id === action.payload.tlID)
       if(index > -1) {
-        state.slice(index, 1)
+        state.splice(index, 1)
       }
     },
     AddTl(state, action: PayloadAction<{ title: string, tlId: string }>) {
@@ -24,22 +24,22 @@ const slice = createSlice({
         filter: 'ALL',
         addedDate: '',
         order: 0,
-        entityStatus: 'idle'
+        entityStatus: 'succeeded'
       })
     },
     ReNameTl(state, action: PayloadAction<{ id: string, title: string }>) {
-      const index = state.findIndex(f=>f.id !== action.payload.id)
+      const index = state.findIndex(f=>f.id === action.payload.id)
       state[index].title = action.payload.title
     },
     ChangeFilterTl(state, action: PayloadAction<{ id: string, value: FilterValueType }>) {
-      const index = state.findIndex(f=>f.id !== action.payload.id)
+      const index = state.findIndex(f=>f.id === action.payload.id)
       state[index].filter = action.payload.value
     },
     SetTodos(state, action: PayloadAction<{ todos: Array<TodosType> }>) {
       return action.payload.todos.map(t => ({ ...t, filter: 'ALL', entityStatus: 'idle' }))
     },
     setEntityStatus(state, action: PayloadAction<{ id: string, entity: RequestStatusType }>) {
-      const index = state.findIndex(f=>f.id !== action.payload.id)
+      const index = state.findIndex(f=>f.id === action.payload.id)
       state[index].entityStatus = action.payload.entity
     },
   }

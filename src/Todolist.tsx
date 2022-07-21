@@ -86,7 +86,7 @@ export const Todolist = React.memo((props: PropsType) => {
         </div>
         <ul>
             {/*если, при загруке страницы все содержимое пропадает, то это приходит значение undefined*/}
-            {filteredTask?.map((m) => {
+            {filteredTask.map((m) => {
                 // const removeTaskHandler =  () => props.removeTask(m.id)
                 // в мапе useCallback не используется
 
