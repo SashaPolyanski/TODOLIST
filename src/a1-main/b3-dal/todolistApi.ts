@@ -74,8 +74,7 @@ export type LoginParamsType = {
 type TasksType = {
   [key: string]: Array<CreateAndRemoveTaskType>
 }
-//
-//
+
 // type Type<T = string, D, F> = {
 //     string: D
 //     number: F
